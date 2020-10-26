@@ -1,0 +1,17 @@
+# Compiled python files
+__pycache__
+*.pyc
+
+# Compiled Java files
+*.class
+
+# Temporary files for documents (e.g.: odt or docx) while open
+.~lock.*
+~$*
+
+# Temporary files
+~*.tmp
+
+# The actual data
+*.csv
+*.db

@@ -1,0 +1,8 @@
+Have a controller that manages all tests
+Have a file for each file to test which states the location of that file
+Have a method for each thing to check in that file:
+    At the top of it, instantiate Controller with the method name and a description of the test
+    Do the test and call either `pass()` or `fail()` on that object to output the result
+    Can output specific messages too such as what was expected and what was actually recieved through the object
+
+See `TestEgpackEgfile.java` for a template

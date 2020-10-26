@@ -1,0 +1,16 @@
+Want to use validation to store the types everything should be so I can automatically read them in that way and use it to validate user input
+
+What I want:
+
+I/O:
+Later, add an option to find and change specific bit every time we make a change
+Later, record each change we make and at the end, save change we've made by finding and changing them individually in the file
+
+TODO:
+Use validation to check exact form of inputs
+
+
+Ideally, make some automated way to set out how you want data to be stored and displayed and inputted 
+
+Can use for contacts too if make general enough
+For any CSV file, I want to be given a list of details of the data and for it to convert it into that data
