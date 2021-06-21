@@ -1,6 +1,8 @@
 package web_server_custom;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -350,7 +352,7 @@ class GUI {
         return content + "</table></div>";
     }
 
-    private static String generateHTML(String title, String rest) {
+    private static String generateHTML(String title, String rest) throws IOException {
         String navs = "";
         for (String page: pages) {
             navs += "<a";
@@ -360,12 +362,16 @@ class GUI {
             navs += " href='/" + page.toLowerCase() + "'>" + page + "</a>";
         }
 
+        // External CSS not being applied so copy it into the head
+        String css = Files.readString(Path.of(pathToCSS));
+
         return ""
         + "<!DOCTYPE html>"
         + "<html>"
             + "<head>"
                 + "<title>" + title + " | Family Tree</title>"
-                + "<link rel='stylesheet' href='" + linkToCSS + "'>"
+                // + "<link rel='stylesheet' type='text/css' href='" + linkToCSS + "'>"
+                + "<style>" + css + "</style>"
                 + "<script src='" + linkToJS + "'></script>"
             + "</head>"
             + "<body>"
