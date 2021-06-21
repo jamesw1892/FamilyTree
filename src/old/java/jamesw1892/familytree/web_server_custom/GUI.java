@@ -336,7 +336,7 @@ class GUI {
 
     // TODO: change to not include IDs and instead only link the names themselves in the string data passed
     private static String tabulate(String[][] data) {
-        String content = "<div class='table'><table id='table'><tr>";
+        String content = "<div class='table'><table id='table'><tr style='position:sticky;top:50px;'>";
         for (int j = 0; j < data[0].length; j++) {
             content += "<th>" + data[0][j] + "</th>";
         }
