@@ -199,7 +199,40 @@ class GUI {
         }
         out += "<h2>Notes</h2>";
         out += "<p>" + person.formatNotes() + "</p>";
+
+        // family tree
+        out += "<h2>Tree</h2>" + treeHTML(person);
+
         handler.returnString(generateHTML("View " + person.formatNameFirstLast(), out));
+    }
+
+    /**
+     * Return a family tree in HTML
+     * @param person
+     * @return
+     */
+    private String treeHTML(Person person) {
+        return "<div class='tree'><ul><li>" + treeHTMLRec(person) + "</li></ul></div>";
+    }
+
+    /**
+     * Recursively create tree in HTML unordered lists of children of the current person
+     * https://thecodeplayer.com/index.php/walkthrough/css3-family-tree
+     */
+    private String treeHTMLRec(Person person) {
+        String out = "";
+
+        out += linkName(person);
+        HashSet<Person> children = personStore.getChildren(person);
+        if (!children.isEmpty()) {
+            out += "<ul>";
+            for (Person child: children) {
+                out += "<li>" + treeHTMLRec(child) + "</li>";
+            }
+            out += "</ul>";
+        }
+
+        return out;
     }
 
     private void handleGetPeopleAll(Handler handler, Header header) throws IOException {
@@ -329,8 +362,7 @@ class GUI {
     }
 
     private void handleGetHome(Handler handler, Header header) throws IOException {
-        String rest = "<h1>Family Tree</h1>"
-                    + "<p>Coming soon</p>";
+        String rest = "<h1>Family Tree</h1>" + treeHTML(personStore.find(15));
         handler.returnString(generateHTML("Home", rest));
     }
 
