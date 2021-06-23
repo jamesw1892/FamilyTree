@@ -338,7 +338,7 @@ class GUI {
     private static String tabulate(String[][] data) {
         String content = "<div class='table'><table id='table'><tr style='position:sticky;top:50px;'>";
         for (int j = 0; j < data[0].length; j++) {
-            content += "<th>" + data[0][j] + "</th>";
+            content += String.format("<th onclick='sortTable(%d)'>%s</th>", j, data[0][j]);
         }
         content += "</tr>";
         for (int i = 1; i < data.length; i++) {
