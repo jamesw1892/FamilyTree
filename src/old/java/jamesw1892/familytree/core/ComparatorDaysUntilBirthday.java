@@ -15,6 +15,21 @@ public class ComparatorDaysUntilBirthday implements Comparator<Person> {
         if (p2days == null) {
             return -1;
         }
-        return p1days.compareTo(p2days);
+        int comp = p1days.compareTo(p2days);
+
+        /*
+        I store people in a tree set which does not allow duplicates.
+        Things are considered the same by the tree set if this returns 0.
+        So if two people have the same birthday, only one would appear.
+        Therefore I add this code to not treat different people with the same
+        birthday as the same. This only affects the comparison between 2 people
+        with the same birthday so they still both appear in the same place in
+        relation to all other people.
+        */
+        if (comp == 0 && person1.getID() != person2.getID()) {
+            return 1;
+        }
+
+        return comp;
 	}
 }
