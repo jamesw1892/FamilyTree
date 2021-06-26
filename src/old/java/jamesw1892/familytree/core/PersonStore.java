@@ -16,7 +16,7 @@ public class PersonStore {
 
     // Constants
     private static final String FILENAME = "./People.csv";
-    private static final String HEADINGS = "ID,First Name,Middle Names,Last Name,Is Male,Birth Day,Birth Month,Birth Year,Is Living,Death Day,Death Month,Death Year,Mother ID,Father ID,Notes";
+    private static final String HEADINGS = "ID,First Name,Middle Names,Last Name,Is Male,Birth Year,Birth Month,Birth Day,Is Living,Death Year,Death Month,Death Day,Mother ID,Father ID,Notes";
 
     // Comparators
     private static final ComparatorDaysUntilBirthday comparatorDaysUntilBirthday = new ComparatorDaysUntilBirthday();
