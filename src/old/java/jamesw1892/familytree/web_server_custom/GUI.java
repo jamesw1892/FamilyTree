@@ -197,8 +197,14 @@ class GUI {
             }
             out += "</ul>";
         }
+
         out += "<h2>Notes</h2>";
-        out += "<p>" + person.formatNotes() + "</p>";
+        String notes = person.formatNotes();
+        if (notes.isEmpty()) {
+            out += "<p>No notes yet</p>";
+        } else {
+            out += "<p>" + notes + "</p>";
+        }
 
         // family tree
         out += "<h2>Tree</h2>" + treeHTML(person);
