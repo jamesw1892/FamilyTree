@@ -20,3 +20,34 @@ Files:
     - `Handler.java`: Handles a single request to the web server
     - `Header.java`: Parse the headers of web requests
 - `web_server_file`: PHP to do the same as the custom web server but on a standard web server that just serves files
+
+# How it works
+
+The batch file `run.bat` can be used to run the program, use `run -h` for the commands.
+
+People are stored in a .csv file. They were stored in a database in the old Python version but this is not very easy to human read and I only need a single table anyway so don't get the benefits of a database.
+
+Fundamentally, this progam stores and displays people. For each person, the following real data is stored about them and in addition, we store an ID, their mother's ID and their father's ID. This is deliberately the only way we link people together to keep it simple. We do not store children, although this can be worked out from searching through all people for who's mother ID or father ID matches the desired person. We also do not store partners of any kind or anything else. We store biological sex only to verify mother/father links. Any other information such as gender, marriages, etc can be recorded as text in the notes section.
+
+## Person Data
+
+For each person, we store the following real data:
+
+- First name: string
+- Middle name(s): string, space separated, can be empty
+- Last name: string
+- Is Male: boolean (biological), can be null meaning unknown
+- Birth year: integer between 1000 and 9999 inclusive, can be null meaning unknown
+- Birth month: integer between 1 and 12 inclusive, can be null meaning unknown
+- Birth day: integer between 1 and 31 inclusive but depends on the month, can be null meaning unknown
+- Is Living: boolean, can be null meaning unknown
+- Death year: integer between 1000 and 9999 inclusive, can be null meaning unknown
+- Death month: integer between 1 and 12 inclusive, can be null meaning unknown
+- Death day: integer between 1 and 31 inclusive but depends on the month, can be null meaning unknown
+- Notes: string - a paragraph or two describing things about them, things that don't have a separate field can be included here
+
+And the following meta data:
+
+- ID: integer >=1 uniquely identifying that person
+- Mother ID: integer >=0 identifying their mother's ID or 0 meaning unknown
+- Father ID: integer >=0 identifying their father's ID or 0 meaning unknown
