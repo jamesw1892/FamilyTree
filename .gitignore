@@ -12,6 +12,9 @@ __pycache__
 # Temporary files
 ~*.tmp
 
-# The actual data
+# The data
 *.csv
 *.db
+
+# VS Code Settings
+.vscode
