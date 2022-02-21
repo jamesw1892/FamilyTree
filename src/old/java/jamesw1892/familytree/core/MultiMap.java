@@ -3,6 +3,10 @@ package core;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * Data structure allowing efficient storage of multiple distinct values of
+ * generic type V under the same key of generic type K.
+ */
 public class MultiMap<K, V> {
     private HashMap<K, HashSet<V>> map;
 
