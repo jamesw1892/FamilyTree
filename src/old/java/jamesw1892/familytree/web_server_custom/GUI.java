@@ -133,12 +133,17 @@ class GUI {
         out += "<label for='nameLast'>Last Name: </label>";
         out += "<input type='text' id='nameLast' value=" + person.formatNameLast() + "><br>";
 
-        // sex - TODO: change to select tag like isLiving
-        out += "Sex: ";
-        out += "<input type='radio' id='sexMale'   name='isMale' value='true' " + (person.getIsMale() != null && person.getIsMale() ? "checked" : "") + ">";
-        out += "<label for='sexMale'>Male</label>";
-        out += "<input type='radio' id='sexFemale' name='isMale' value='false' " + (person.getIsMale() != null && !person.getIsMale() ? "checked" : "") + ">";
-        out += "<label for='sexFemale'>Female</label><br>";
+        // sex
+        out += "<label for='isMale'>Sex:</label><br>";
+        out += "<select name='isMale' id='isMale'>";
+        if (person.getIsMale()) {
+            out += "<option value='true'>Male</option>";
+            out += "<option value='false'>Female</option>";
+        } else {
+            out += "<option value='false'>Female</option>";
+            out += "<option value='true'>Male</option>";
+        }
+        out += "<option value='null'>Unknown</option></select><br>";
 
         // Date of birth - TODO: use input type='number' min='1' max='5'
 
