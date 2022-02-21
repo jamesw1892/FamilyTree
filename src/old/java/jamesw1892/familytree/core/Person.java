@@ -360,6 +360,10 @@ public class Person implements Comparable<Person> {
         return obj.toString();
     }
 
+    public String toString() {
+        return this.formatNameFirstLast();
+    }
+
     public String toFile() {
         return  this.formatID()
         + "," + this.nameFirst
