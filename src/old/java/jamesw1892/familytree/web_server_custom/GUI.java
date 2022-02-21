@@ -152,7 +152,7 @@ class GUI {
             out += "<option value='false'>Deceased</option>";
             out += "<option value='true'>Living</option>";
         }
-        out += "</select><br>";
+        out += "<option value='null'>Unknown</option></select><br>";
 
         // Date of death - TODO: use input type='number' min='1' max='5'
 
