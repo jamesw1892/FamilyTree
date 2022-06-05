@@ -212,19 +212,28 @@ public class Header {
 
     private void parseQuery(String q) {
         this.queryStr = q;
-        this.query = new HashMap<>();
-        if (!q.isEmpty()) {
-            for (String pair: q.split("&")) {
+        this.query = this.parseUrlList(q);
+    }
+
+    /**
+     * Return a dictionary of fields and values in the url list of the form
+     * field1=value1&field2=value2
+     */
+    private HashMap<String, String> parseUrlList(String listStr) {
+        HashMap<String, String> listMap = new HashMap<>();
+
+        if (listStr != null && !listStr.isEmpty()) {
+            for (String pair: listStr.split("&")) {
                 String[] pairSplit = pair.split("=");
                 switch (pairSplit.length) {
                     case 2:
-                        this.query.put(pairSplit[0], pairSplit[1]);
+                        listMap.put(pairSplit[0], pairSplit[1]);
                         break;
                     case 1:
-                        this.query.put(pairSplit[0], "");
+                        listMap.put(pairSplit[0], "");
                         break;
                     case 0:
-                        // only happens when 'q' only contain '&'s
+                        // only happens when 'listStr' only contain '&'s
                         if (!this.makeWork) {
                             throw new IllegalArgumentException("Invalid header, query pair must contain a non-empty key");
                         }
@@ -235,6 +244,8 @@ public class Header {
                 }
             }
         }
+
+        return listMap;
     }
 
     /**
