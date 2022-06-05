@@ -152,8 +152,12 @@ class GUI {
         out += "</select><br>";
 
         // Date of birth
-        out += "<label for='DOB'>Date of Birth: </label>";
-        out += "<input type='date' id='DOB' name='DOB' value='" + person.formatDateOfBirthShortInternational() + "'><br>";
+        out += "<label for='birthYear'>Birth Year: </label>";
+        out += "<input type='number' id='birthYear' name='birthYear' min='1000' max='9999' value='" + person.getBirthYear() + "'><br>";
+        out += "<label for='birthMonth'>Birth Month: </label>";
+        out += "<input type='number' id='birthMonth' name='birthMonth' min='1' max='12' value='" + person.getBirthMonth() + "'><br>";
+        out += "<label for='birthDay'>Birth Day: </label>";
+        out += "<input type='number' id='birthDay' name='birthDay' min='1' max='31' value='" + person.getBirthDay() + "'><br>";
 
         // Is Living
         out += "<label for='isLiving'>Living? </label>";
@@ -174,8 +178,12 @@ class GUI {
         out += "</select><br>";
 
         // Date of death
-        out += "<label for='DOD'>Date of Death: </label>";
-        out += "<input type='date' id='DOD' name='DOD' value='" + person.formatDateOfDeathShortInternational() + "'><br>";
+        out += "<label for='deathYear'>Death Year: </label>";
+        out += "<input type='number' id='deathYear' name='deathYear' min='1000' max='9999' value='" + person.getDeathYear() + "'><br>";
+        out += "<label for='deathMonth'>Death Month: </label>";
+        out += "<input type='number' id='deathMonth' name='deathMonth' min='1' max='12' value='" + person.getDeathMonth() + "'><br>";
+        out += "<label for='deathDay'>Death Day: </label>";
+        out += "<input type='number' id='deathDay' name='deathDay' min='1' max='31' value='" + person.getDeathDay() + "'><br>";
 
         // Mother
         out += "<label for='mother'>Mother: </label>";
