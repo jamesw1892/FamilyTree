@@ -321,33 +321,61 @@ class GUI {
         }
 
         // family tree
-        out += "<h2>Tree</h2>" + treeHTML(person);
+        out += "<div class='row'>";
+        out += "<div class='column'><h2>Descendants Tree</h2>" + treeHTMLDown(person) + "</div>";
+        out += "<div class='column'><h2>Ancestors Tree</h2>" + treeHTMLUp(person) + "</div>";
+        out += "</div>";
 
         handler.returnString(generateHTML("View " + person.formatNameFirstLast(), out));
     }
 
+    private String treeHTMLUp(Person person) {
+        return "<div class='tree'><ul><li>" + treeHTMLUpRec(person) + "</li></ul></div>";
+    }
+
+    private String treeHTMLDown(Person person) {
+        return "<div class='tree'><ul><li>" + treeHTMLDownRec(person) + "</li></ul></div>";
+    }
+
     /**
-     * Return a family tree in HTML
-     * @param person
-     * @return
+     * The same as treeHTMLDownRec but instead of going down it goes up.
+     * It still creates a tree going down though so it's the wrong way up.
+     * It creates a sub-list containing their parents and recurse.
+     * So it's a binary tree until we don't know their parents anymore.
      */
-    private String treeHTML(Person person) {
-        return "<div class='tree'><ul><li>" + treeHTMLRec(person) + "</li></ul></div>";
+    private String treeHTMLUpRec(Person person) {
+        String out = linkName(person);
+        HashSet<Person> parents = new HashSet<>();
+        Person mother = this.personStore.getMother(person);
+        if (mother != null) {
+            parents.add(mother);
+        }
+        Person father = this.personStore.getFather(person);
+        if (father != null) {
+            parents.add(father);
+        }
+        if (!parents.isEmpty()) {
+            out += "<ul>";
+            for (Person parent: parents) {
+                out += "<li>" + treeHTMLUpRec(parent) + "</li>";
+            }
+            out += "</ul>";
+        }
+
+        return out;
     }
 
     /**
      * Recursively create tree in HTML unordered lists of children of the current person
      * https://thecodeplayer.com/index.php/walkthrough/css3-family-tree
      */
-    private String treeHTMLRec(Person person) {
-        String out = "";
-
-        out += linkName(person);
+    private String treeHTMLDownRec(Person person) {
+        String out = linkName(person);
         HashSet<Person> children = personStore.getChildren(person);
         if (!children.isEmpty()) {
             out += "<ul>";
             for (Person child: children) {
-                out += "<li>" + treeHTMLRec(child) + "</li>";
+                out += "<li>" + treeHTMLDownRec(child) + "</li>";
             }
             out += "</ul>";
         }
@@ -482,7 +510,7 @@ class GUI {
     }
 
     private void handleGetHome(Handler handler, Header header) throws IOException {
-        String rest = "<h1>Family Tree</h1>" + treeHTML(personStore.find(15));
+        String rest = "<h1>Family Tree</h1>" + treeHTMLDown(personStore.find(15));
         handler.returnString(generateHTML("Home", rest));
     }
 

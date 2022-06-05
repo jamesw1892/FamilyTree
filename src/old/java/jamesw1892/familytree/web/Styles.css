@@ -50,6 +50,17 @@ a {
     /* text-decoration: none; */
 }
 
+.column {
+    float: left;
+    width: 50%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 
 /*
 Tree https://thecodeplayer.com/index.php/walkthrough/css3-family-tree
