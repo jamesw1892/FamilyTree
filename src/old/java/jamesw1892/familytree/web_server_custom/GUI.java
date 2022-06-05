@@ -122,8 +122,8 @@ class GUI {
         //  - id is used to link labels to inputs
         //  - name is what it is called when submitted in POST request
         //  - value is what they start with already inputted into them
-
-        String out = "<form action='' method='POST'>";
+        String out = "<button onclick=\"window.location.href='" + linkToPerson + person.formatID() + "';\">Cancel</button>";
+        out += "<form action='' method='POST'>";
 
         // names
         out += "<label for='nameFirst'>First Name: </label>";
