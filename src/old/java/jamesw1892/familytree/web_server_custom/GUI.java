@@ -129,12 +129,12 @@ class GUI {
         out += "<label for='nameFirst'>First Name: </label>";
         out += "<input type='text' id='nameFirst' name='nameFirst' value=" + person.formatNameFirst() + "><br>";
         out += "<label for='nameMiddles'>Middle Name(s): </label>";
-        out += "<input type='text' id='nameMiddles' value=" + person.formatNameMiddles() + "><br>";
+        out += "<input type='text' id='nameMiddles' name='nameMiddles' value=" + person.formatNameMiddles() + "><br>";
         out += "<label for='nameLast'>Last Name: </label>";
-        out += "<input type='text' id='nameLast' value=" + person.formatNameLast() + "><br>";
+        out += "<input type='text' id='nameLast' name='nameLast' value=" + person.formatNameLast() + "><br>";
 
         // sex
-        out += "<label for='isMale'>Sex:</label><br>";
+        out += "<label for='isMale'>Sex: </label>";
         out += "<select name='isMale' id='isMale'>";
         if (person.getIsMale()) {
             out += "<option value='true'>Male</option>";
@@ -145,10 +145,12 @@ class GUI {
         }
         out += "<option value='null'>Unknown</option></select><br>";
 
-        // Date of birth - TODO: use input type='number' min='1' max='5'
+        // Date of birth
+        out += "<label for='DOB'>Date of Birth: </label>";
+        out += "<input type='date' id='DOB' name='DOB' value='" + person.formatDateOfBirthShortInternational() + "'><br>";
 
         // Is Living
-        out += "<label for='isLiving'>Living?</label><br>";
+        out += "<label for='isLiving'>Living? </label>";
         out += "<select name='isLiving' id='isLiving'>";
         if (person.getIsLiving()) {
             out += "<option value='true'>Living</option>";
@@ -159,15 +161,37 @@ class GUI {
         }
         out += "<option value='null'>Unknown</option></select><br>";
 
-        // Date of death - TODO: use input type='number' min='1' max='5'
+        // Date of death
+        out += "<label for='DOD'>Date of Death: </label>";
+        out += "<input type='date' id='DOD' name='DOD' value='" + person.formatDateOfDeathShortInternational() + "'><br>";
 
-        // Parents - TODO: use datalist tag
+        // Mother
+        out += "<label for='mother'>Mother: </label>";
+        out += "<input list='motherlist' name='mother' id='mother' value='" + person.formatMotherID() + "'>"; // use currently set mother as default if there is one
+        out += "<datalist name='motherlist' id='motherlist'>";
+        out += "<option value='Unknown'>"; // unknown option
+        for (Person potentialMother: this.personStore.getEveryoneByID()) { // TODO: potentially only include females
+            out += "<option value='" + potentialMother.formatID() + "'>" + potentialMother.formatNameFirstLast() + "</option>";
+        }
+        out += "</datalist><br>";
+
+        // Father
+        out += "<label for='father'>Father: </label>";
+        out += "<input list='fatherlist' name='father' id='father' value='" + person.formatFatherID() + "'>"; // use currently set father as default if there is one
+        out += "<datalist name='fatherlist' id='fatherlist'>";
+        out += "<option value='Unknown'>"; // unknown option
+        for (Person potentialFather: this.personStore.getEveryoneByID()) { // TODO: potentially only include males
+            out += "<option value='" + potentialFather.formatID() + "'>" + potentialFather.formatNameFirstLast() + "</option>";
+        }
+        out += "</datalist><br>";
 
         // Notes
         out += "<label for='notes'>Notes:</label><br>";
         out += "<textarea id='notes' name='notes' rows='5' cols='100'>" + person.formatNotes() + "</textarea><br>";
 
+        // Submit button
         out += "<input type='submit' value='Submit'>";
+        out += "</form>";
         handler.returnString(generateHTML("Edit " + person.formatNameFirstLast(), out));
     }
 
