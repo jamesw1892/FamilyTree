@@ -136,14 +136,20 @@ class GUI {
         // sex
         out += "<label for='isMale'>Sex: </label>";
         out += "<select name='isMale' id='isMale'>";
-        if (person.getIsMale()) {
+        if (person.getIsMale() == null) {
+            out += "<option value='null'>Unknown</option>";
             out += "<option value='true'>Male</option>";
             out += "<option value='false'>Female</option>";
+        } else if (person.getIsMale()) {
+            out += "<option value='true'>Male</option>";
+            out += "<option value='false'>Female</option>";
+            out += "<option value='null'>Unknown</option>";
         } else {
             out += "<option value='false'>Female</option>";
             out += "<option value='true'>Male</option>";
+            out += "<option value='null'>Unknown</option>";
         }
-        out += "<option value='null'>Unknown</option></select><br>";
+        out += "</select><br>";
 
         // Date of birth
         out += "<label for='DOB'>Date of Birth: </label>";
@@ -152,14 +158,20 @@ class GUI {
         // Is Living
         out += "<label for='isLiving'>Living? </label>";
         out += "<select name='isLiving' id='isLiving'>";
-        if (person.getIsLiving()) {
+        if (person.getIsLiving() == null) {
+            out += "<option value='null'>Unknown</option>";
             out += "<option value='true'>Living</option>";
             out += "<option value='false'>Deceased</option>";
+        } else if (person.getIsLiving()) {
+            out += "<option value='true'>Living</option>";
+            out += "<option value='false'>Deceased</option>";
+            out += "<option value='null'>Unknown</option>";
         } else {
             out += "<option value='false'>Deceased</option>";
             out += "<option value='true'>Living</option>";
+            out += "<option value='null'>Unknown</option>";
         }
-        out += "<option value='null'>Unknown</option></select><br>";
+        out += "</select><br>";
 
         // Date of death
         out += "<label for='DOD'>Date of Death: </label>";
