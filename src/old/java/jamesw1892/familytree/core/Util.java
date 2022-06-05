@@ -207,6 +207,20 @@ public class Util {
     }
 
     public static String normaliseString(String s) {
-        return s.replace(System.lineSeparator(), " ").strip().replace(",", ";");
+        return s.strip();
+    }
+
+    /**
+     * Decode the given string for CSV by replacing semi-colons with commas
+     */
+    public static String decodeString(String s) {
+        return s.replace(';', ',');
+    }
+
+    /**
+     * Encode the given string for CSV by replacing commas with semi-colons
+     */
+    public static String encodeString(String s) {
+        return s.replace(',', ';');
     }
 }
