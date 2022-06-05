@@ -107,12 +107,12 @@ public class Util {
     }
 
     public static int maxValidDay(Integer year, Integer month) {
-        if (year == null || month == null) {
+        if (month == null) {
             return 31;
         }
         switch (month) {
             case 2:
-                return (year % 4 == 0)? 29: 28;
+                return (year == null || year % 4 == 0)? 29: 28;
             case 4:
             case 6:
             case 9:
