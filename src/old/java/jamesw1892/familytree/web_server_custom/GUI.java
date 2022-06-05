@@ -213,7 +213,7 @@ class GUI {
         out += "<p><b>Full Name:</b> " + person.formatNameFull() + "</p>";
         out += "<p><b>Sex:</b> " + person.formatSex() + "</p>";
         out += "<p><b>Date of Birth:</b> " + person.formatDateOfBirthLong() + "</p>";
-        if (person.getIsLiving()) {
+        if (person.getIsLiving() != null && person.getIsLiving()) {
             out += "<p><b>Age:</b> " + person.formatAgeAtDeath();
         } else {
             out += "<p><b>Date of Death:</b> " + person.formatDateOfDeathLong() + "</p>";
