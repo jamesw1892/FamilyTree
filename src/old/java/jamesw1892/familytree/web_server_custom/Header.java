@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +19,8 @@ import java.util.HashMap;
  * 
  * `query` is `HashMap` version of `queryStr` and `fields` is `HashMap` version of `fieldsStr`
  * where `queryStr` is `key1=val1&key2=val2` etc and `fieldsStr` is `key1: val1[newline]key2: val2` etc
+ * 
+ * data is the data appearing after the header, confusingly part of this class
  */
 public class Header {
     private String header;
@@ -35,6 +39,7 @@ public class Header {
     private String version;
     private String fieldsStr;
     private HashMap<String, String> fields;
+    private String data = null;
     private boolean makeWork;
 
     /**
@@ -47,24 +52,37 @@ public class Header {
      */
     public Header(Socket socket, boolean makeWork) throws IOException {
         this.makeWork = makeWork;
-        ArrayList<String> lines = read(socket);
-        this.parse(lines);
-    }
 
-    private static ArrayList<String> read(Socket socket) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<String> headerLines = new ArrayList<>();
         String line;
 
+        // read all header lines into the array list and parse
         while ((line = in.readLine()) != null && !line.isEmpty()) {
-            lines.add(line);
+            headerLines.add(line);
         }
-        // TODO: '!line.isEmpty()' is probably stopping reading content after header which containts content of post request??
+        this.parse(headerLines);
 
-        // don't close as will close the socket
+        line = "";
 
-        return lines;
+        // Now we need to read the post data if there is any
+        // We can't read until EOF because EOF is only given if the socket is
+        // closed and web browsers don't do this
+        // So instead we use content-length to read that many characters
+        if (this.fields.containsKey("Content-Length")) {
+            int contentLength = Integer.valueOf(this.fields.get("Content-Length"));
+            for (int dummy = 0; dummy < contentLength; dummy++) {
+                char chr = (char) in.read();
+                line += chr;
+            }
+
+            // decode if encoded as expected
+            if (this.fields.get("Content-Type").equals("application/x-www-form-urlencoded")) {
+                this.data = URLDecoder.decode(line, StandardCharsets.UTF_8.toString());
+            }
+            // if not encoded like this then not implemented so ignore and leave this.data as null
+        }
+        // don't close buffered reader as will close the socket
     }
 
     private void parse(ArrayList<String> lines) {
@@ -322,6 +340,10 @@ public class Header {
 
 	public HashMap<String, String> getFields() {
 		return this.fields;
+    }
+
+    public String getData() {
+        return this.data;
     }
 
 	public String toString() {
