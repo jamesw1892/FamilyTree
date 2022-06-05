@@ -217,8 +217,12 @@ public class Person implements Comparable<Person> {
         return this.isMale? "Male": "Female";
     }
 
-    public String formatDateOfBirthShort() {
-        return Util.dateShort(this.birthYear, this.birthMonth, this.birthDay);
+    public String formatDateOfBirthShortEuropean() {
+        return Util.dateShortEuropean(this.birthYear, this.birthMonth, this.birthDay);
+    }
+
+    public String formatDateOfBirthShortInternational() {
+        return Util.dateShortInternational(this.birthYear, this.birthMonth, this.birthDay);
     }
 
     public String formatDateOfBirthLong() {
@@ -236,11 +240,18 @@ public class Person implements Comparable<Person> {
         return this.isLiving? "Living": "Deceased";
     }
 
-    public String formatDateOfDeathShort() {
+    public String formatDateOfDeathShortEuropean() {
         if (this.isLiving == null) {
             return "Unknown";
         }
-        return this.isLiving? "Living": Util.dateShort(this.deathYear, this.deathMonth, this.deathDay);
+        return this.isLiving? "Living": Util.dateShortEuropean(this.deathYear, this.deathMonth, this.deathDay);
+    }
+
+    public String formatDateOfDeathShortInternational() {
+        if (this.isLiving == null) {
+            return "Unknown";
+        }
+        return this.isLiving? "Living": Util.dateShortInternational(this.deathYear, this.deathMonth, this.deathDay);
     }
 
     public String formatDateOfDeathLong() {

@@ -12,14 +12,24 @@ public class Util {
         return s;
     }
 
-    public static String dateShort(Integer year, Integer month, Integer day) {
+    public static String dateShortEuropean(Integer year, Integer month, Integer day) {
         if (year == null && month == null && day == null) {
             return "Unknown";
         }
 
-        return    (day == null?   "??": addLeadingZeros(day, 2))
+        return  (day   == null?   "??": addLeadingZeros(day  , 2))
         + "/" + (month == null?   "??": addLeadingZeros(month, 2))
-         + "/" + (year == null? "????": addLeadingZeros(year, 4));
+        + "/" + (year  == null? "????": addLeadingZeros(year , 4));
+    }
+
+    public static String dateShortInternational(Integer year, Integer month, Integer day) {
+        if (year == null && month == null && day == null) {
+            return "Unknown";
+        }
+
+        return  (year  == null? "????": addLeadingZeros(year , 4))
+        + "-" + (month == null?   "??": addLeadingZeros(month, 2))
+        + "-" + (day   == null?   "??": addLeadingZeros(day  , 2));
     }
 
     public static String dateLong(Integer year, Integer month, Integer day) {
