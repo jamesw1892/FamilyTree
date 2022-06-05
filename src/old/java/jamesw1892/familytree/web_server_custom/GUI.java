@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.zip.DataFormatException;
@@ -55,7 +56,71 @@ class GUI {
     }
 
     private void handlePost(Handler handler, Header header) throws IOException {
-        handler.returnString(generateHTML("Post", header.getQueryStr().replace(System.lineSeparator(), "<br>")));
+
+        int ID = 0;
+        try {
+            ID = Integer.parseInt(header.getQuery().get("id"));
+            if (ID > 0) {
+                Person person = this.personStore.find(ID);
+                if (person == null) {
+                    handler.errorNotFound();
+                } else {
+                    this.handlePostSaveData(handler, header, person);
+                }
+            } else {
+                handler.errorNotFound();
+            }
+        } catch (NumberFormatException e) {
+            handler.errorNotFound();
+        }
+    }
+
+    private static Boolean parseBool(String b) {
+        if (b.equals("true")) {
+            return true;
+        } else if (b.equals("false")) {
+            return false;
+        }
+        return null;
+    }
+
+    private static Integer parseInt(String i) {
+        if (i == null || i.isEmpty() || i.equals("null") || i.equals("Unknown")) {
+            return null;
+        }
+
+        return Integer.parseInt(i);
+    }
+
+    private void handlePostSaveData(Handler handler, Header header, Person person) throws IOException {
+
+        HashMap<String, String> data = header.getData();
+        String nameFirst = data.get("nameFirst");
+        String nameMiddles = data.get("nameMiddles");
+        String nameLast = data.get("nameLast");
+        Boolean isMale = parseBool(data.get("isMale"));
+        Integer birthYear = parseInt(data.get("birthYear"));
+        Integer birthMonth = parseInt(data.get("birthMonth"));
+        Integer birthDay = parseInt(data.get("birthDay"));
+        Boolean isLiving = parseBool(data.get("isLiving"));
+        Integer deathYear = parseInt(data.get("deathYear"));
+        Integer deathMonth = parseInt(data.get("deathMonth"));
+        Integer deathDay = parseInt(data.get("deathDay"));
+        Integer motherID = parseInt(data.get("mother"));
+        Integer fatherID = parseInt(data.get("father"));
+        String notes = data.get("notes");
+
+        String html;
+
+        try {
+            this.personStore.editAll(person, nameFirst, nameMiddles, nameLast, isMale, birthYear, birthMonth, birthDay, isLiving, deathYear, deathMonth, deathDay, notes, motherID, fatherID);
+            html = "<h1>Success</h1><p>Saved</p>";
+        } catch (IllegalArgumentException e) {
+            html = "<h1>Failure</h1><p>Invalid data, not edited, try again</p><p>" + e.getMessage() + "</p>";
+        }
+        html += "<button onclick=\"window.location.href='" + linkToPerson + person.formatID() + "';\">Back</button>";
+
+        handler.returnString(generateHTML("Post Result", html));
     }
 
     private void handleGet(Handler handler, Header header) throws IOException {
