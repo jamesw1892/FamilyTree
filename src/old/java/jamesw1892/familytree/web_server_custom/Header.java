@@ -17,10 +17,10 @@ import java.util.HashMap;
  *                _____basename_____
  * method dirname/filename.extension?queryStr#fragment protocol/version[newline]fieldsStr
  * 
- * `query` is `HashMap` version of `queryStr` and `fields` is `HashMap` version of `fieldsStr`
- * where `queryStr` is `key1=val1&key2=val2` etc and `fieldsStr` is `key1: val1[newline]key2: val2` etc
- * 
  * data is the data appearing after the header, confusingly part of this class
+ * 
+ * `query`, `fields`, and `data` are the `HashMap` versions of `queryStr`, `fieldsStr`, and `dataStr` respectively
+ * where `queryStr` and `dataStr` is `key1=val1&key2=val2` etc and `fieldsStr` is `key1: val1[newline]key2: val2` etc
  */
 public class Header {
     private String header;
@@ -39,7 +39,8 @@ public class Header {
     private String version;
     private String fieldsStr;
     private HashMap<String, String> fields;
-    private String data = null;
+    private String dataStr;
+    private HashMap<String, String> data;
     private boolean makeWork;
 
     /**
@@ -64,6 +65,7 @@ public class Header {
         this.parse(headerLines);
 
         line = "";
+        this.dataStr = null; // default
 
         // Now we need to read the post data if there is any
         // We can't read until EOF because EOF is only given if the socket is
@@ -78,10 +80,14 @@ public class Header {
 
             // decode if encoded as expected
             if (this.fields.get("Content-Type").equals("application/x-www-form-urlencoded")) {
-                this.data = URLDecoder.decode(line, StandardCharsets.UTF_8.toString());
+                this.dataStr = URLDecoder.decode(line, StandardCharsets.UTF_8.toString());
             }
             // if not encoded like this then not implemented so ignore and leave this.data as null
         }
+
+        // parse into dictionary
+        this.data = this.parseUrlList(this.dataStr);
+
         // don't close buffered reader as will close the socket
     }
 
@@ -353,8 +359,12 @@ public class Header {
 		return this.fields;
     }
 
-    public String getData() {
-        return this.data;
+    public String getDataStr() {
+        return this.dataStr;
+    }
+
+	public HashMap<String, String> getData() {
+		return this.data;
     }
 
 	public String toString() {
