@@ -298,19 +298,42 @@ class GUI {
         Person mother = personStore.getMother(person);
         Person father = personStore.getFather(person);
         HashSet<Person> children = personStore.getChildren(person);
+        HashSet<Person> siblings = personStore.getSiblings(person);
+        HashSet<Person> partners = personStore.getPartners(person);
 
         out += "<p><b>Mother:</b> " + linkName(mother) + "</p>";
         out += "<p><b>Father:</b> " + linkName(father) + "</p>";
 
+        out += "<div class='row'>";
+
+        out += "<div class='column'><h2>Children</h2>";
         if (children.isEmpty()) {
             out += "<p>No children</p>";
         } else {
-            out += "<h2>Children</h2><ul>";
             for (Person child: children) {
-                out += "<li>" + linkName(child) + "</li>";
+                out += "<p>" + linkName(child) + "</p>";
             }
-            out += "</ul>";
         }
+
+        out += "</div><div class='column'><h2>Siblings</h2>";
+        if (siblings.isEmpty()) {
+            out += "<p>No siblings</p>";
+        } else {
+            for (Person sibling: siblings) {
+                out += "<p>" + linkName(sibling) + "</p>";
+            }
+        }
+
+        out += "</div><div class='column'><h2>Partners</h2>";
+        if (partners.isEmpty()) {
+            out += "<p>No partners</p>";
+        } else {
+            for (Person partner: partners) {
+                out += "<p>" + linkName(partner) + "</p>";
+            }
+        }
+
+        out += "</div></div>";
 
         out += "<h2>Notes</h2>";
         String notes = person.formatNotes();
