@@ -79,6 +79,52 @@ public class PersonStore {
         return children;
     }
 
+    /**
+     * Return all people who share children with this person, not including
+     * this person themself.
+     * Return null if and only if this person is null.
+     */
+    public HashSet<Person> getPartners(Person person) {
+        if (person == null) {
+            return null;
+        }
+        HashSet<Person> partners = new HashSet<>();
+
+        for (Person child: this.getChildren(person)) {
+            Person[] parents = {this.getMother(child), this.getFather(child)};
+            for (Person parent: parents) {
+                if (parent != null && !parent.equals(person)) {
+                    partners.add(parent);
+                }
+            }
+        }
+        return partners;
+    }
+
+    /**
+     * Return all people who share parents with this person, not including this
+     * person themself.
+     * Return null if and only if this person is null.
+     */
+    public HashSet<Person> getSiblings(Person person) {
+        if (person == null) {
+            return null;
+        }
+        HashSet<Person> siblings = new HashSet<>();
+        Person[] parents = {this.getMother(person), this.getFather(person)};
+
+        for (Person parent: parents) {
+            if (parent != null) {
+                for (Person child: this.getChildren(parent)) {
+                    if (!child.equals(person)) {
+                        siblings.add(child);
+                    }
+                }
+            }
+        }
+        return siblings;
+    }
+
     public String formatChildrenNames(Person person) {
         if (person == null) {
             return null;
