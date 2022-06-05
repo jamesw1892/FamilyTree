@@ -185,7 +185,15 @@ public class PersonStore {
     Boolean isMale,   Integer birthYear, Integer birthMonth, Integer birthDay,
     Boolean isLiving, Integer deathYear, Integer deathMonth, Integer deathDay,
     String notes, Integer motherID, Integer fatherID) {
-        Person person = this.findAssert(ID);
+        this.editAll(this.findAssert(ID), nameFirst, nameMiddles, nameLast,
+        isMale, birthYear, birthMonth, birthDay, isLiving, deathYear,
+        deathMonth, deathDay, notes, motherID, fatherID);
+    }
+
+    public void editAll(Person person, String nameFirst, String nameMiddles, String nameLast,
+    Boolean isMale,   Integer birthYear, Integer birthMonth, Integer birthDay,
+    Boolean isLiving, Integer deathYear, Integer deathMonth, Integer deathDay,
+    String notes, Integer motherID, Integer fatherID) {
         this.editNames(person, nameFirst, nameMiddles, nameLast);
         this.editSex(person, isMale);
         this.editDOB(person, birthYear, birthMonth, birthDay);
