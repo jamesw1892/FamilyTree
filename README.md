@@ -8,12 +8,13 @@ A program for viewing and editing family members and a family tree.
 - To help with remembering birthdays by providing a view sorted by closest birthday first, showing: name, number of days until birthday, birth day, and age on birthday
 - To display a family tree dynamically made from the people
 
-# Old Versions
+# Versions
 
-There are 2 old versions:
+There are three versions in increasing order of age which each have their own README files:
 
-- A very old version in Python that only runs locally
-- A less old version in Java that has a command-line interface and web server. I tried getting it to work on an existing web server but this would not work very well dynamically without a library - the purpose of the new version
+1. Old Python (`src/old/python`): This is a very old version that stored the data in a database. This hasn't been touched since June 2020.
+1. Old Java (`src/old/java`): **This is the current version** despite the below version being planned. It stores data in a CSV file and the main web version is a custom web server, although files that can be served by a generic web server were started.
+1. New Java (`src/main`): This has barely been started but was aimed at simplifying the web code by using the Spark web framework to serve templated HTML files.
 
 # Things that could be included in Notes
 
