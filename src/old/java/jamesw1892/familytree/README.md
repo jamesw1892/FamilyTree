@@ -33,21 +33,25 @@ Fundamentally, this progam stores and displays people. For each person, the foll
 
 For each person, we store the following real data:
 
-- First name: string
-- Middle name(s): string, space separated, can be empty
-- Last name: string
-- Is Male: boolean (biological), can be null meaning unknown
-- Birth year: integer between 1000 and 9999 inclusive, can be null meaning unknown
-- Birth month: integer between 1 and 12 inclusive, can be null meaning unknown
-- Birth day: integer between 1 and 31 inclusive but depends on the month, can be null meaning unknown
-- Is Living: boolean, can be null meaning unknown
-- Death year: integer between 1000 and 9999 inclusive, can be null meaning unknown
-- Death month: integer between 1 and 12 inclusive, can be null meaning unknown
-- Death day: integer between 1 and 31 inclusive but depends on the month, can be null meaning unknown
-- Notes: string - a paragraph or two describing things about them, things that don't have a separate field can be included here
+- **First name:** string
+- **Middle name(s):** string, space separated, can be empty
+- **Last name:** string
+- **Is Male:** boolean (biological), can be null meaning unknown
+- **Birth year:** integer between 1000 and 9999 inclusive, can be null meaning unknown
+- **Birth month:** integer between 1 and 12 inclusive, can be null meaning unknown
+- **Birth day:** integer between 1 and 31 inclusive but depends on the month, can be null meaning unknown
+- **Is Living:** boolean, can be null meaning unknown
+- **Death year:** integer between 1000 and 9999 inclusive, can be null meaning unknown
+- **Death month:** integer between 1 and 12 inclusive, can be null meaning unknown
+- **Death day:** integer between 1 and 31 inclusive but depends on the month, can be null meaning unknown
+- **Notes:** string - a paragraph or two describing things about them, things that don't have a separate field can be included here
 
 And the following meta data:
 
-- ID: integer >=1 uniquely identifying that person
-- Mother ID: integer >=0 identifying their mother's ID or 0 meaning unknown
-- Father ID: integer >=0 identifying their father's ID or 0 meaning unknown
+- **ID:** integer >=1 uniquely identifying that person
+- **Mother ID:** integer >=0 identifying their mother's ID or 0 meaning unknown
+- **Father ID:** integer >=0 identifying their father's ID or 0 meaning unknown
+
+## Calculating Children
+
+Because of the simple nature of the program where the only link between people are mother and father, it is computationally expensive to calculate children. The only method is to search through every person and see if one of their parents is the desired person. To save time, we do this once at the start of the program - when we read in the data from the database. Then we store the IDs of each person's children so they can be efficiently looked-up. To do this, the `MultiMap` class is used to efficiently but temporarily store children of people that haven't been processed until they are.
