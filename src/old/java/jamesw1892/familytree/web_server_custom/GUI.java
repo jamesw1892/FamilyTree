@@ -18,12 +18,14 @@ import core.PersonStore;
  */
 class GUI {
     private PersonStore personStore;
-    private static final String[] pages = {"Home", "People", "Birthdays"};
-    public static final String linkToPerson = "/people?id=";
-    private static final String linkToCSS = "/styles.css";
-    private static final String pathToCSS = "web/Styles.css";
-    private static final String linkToJS = "/script.js";
-    private static final String pathToJS = "web/Script.js";
+    private static final String[] PAGES = {"Home", "People", "Birthdays"};
+    private static final String LINK_TO_PERSON = "/person/";
+    private static final String LINK_TO_CSS = "/styles.css";
+    private static final String PATH_TO_CSS = "web/Styles.css";
+    private static final String LINK_TO_JS = "/script.js";
+    private static final String PATH_TO_JS = "web/Script.js";
+    private static final String LINK_TO_FAVICON = "/favicon.ico";
+    private static final String PATH_TO_FAVICON = "web/favicon.ico";
 
     public GUI() throws IOException, DataFormatException {
         this.personStore = new PersonStore();
@@ -57,22 +59,18 @@ class GUI {
 
     private void handlePost(Handler handler, Header header) throws IOException {
 
-        int ID = 0;
         try {
-            ID = Integer.parseInt(header.getQuery().get("id"));
+            int ID = Integer.parseInt(header.getFilename());
             if (ID > 0) {
                 Person person = this.personStore.find(ID);
-                if (person == null) {
-                    handler.errorNotFound();
-                } else {
+                if (person != null) {
                     this.handlePostSaveData(handler, header, person);
+                    return;
                 }
-            } else {
-                handler.errorNotFound();
             }
-        } catch (NumberFormatException e) {
-            handler.errorNotFound();
-        }
+        } catch (NumberFormatException e) {}
+
+        handler.errorNotFound();
     }
 
     private static Boolean parseBool(String b) {
@@ -113,12 +111,14 @@ class GUI {
         String html;
 
         try {
-            this.personStore.editAll(person, nameFirst, nameMiddles, nameLast, isMale, birthYear, birthMonth, birthDay, isLiving, deathYear, deathMonth, deathDay, notes, motherID, fatherID);
+            this.personStore.editAll(person, nameFirst, nameMiddles, nameLast,
+                isMale, birthYear, birthMonth, birthDay, isLiving, deathYear,
+                deathMonth, deathDay, notes, motherID, fatherID);
             html = "<h1>Success</h1><p>Saved</p>";
         } catch (IllegalArgumentException e) {
             html = "<h1>Failure</h1><p>Invalid data, not edited, try again</p><p>" + e.getMessage() + "</p>";
         }
-        html += "<button onclick=\"window.location.href='" + linkToPerson + person.formatID() + "';\">Back</button>";
+        html += "<button onclick=\"window.location.href='" + LINK_TO_PERSON + person.formatID() + "';\">Back</button>";
 
         handler.returnString(generateHTML("Post Result", html));
     }
@@ -126,14 +126,14 @@ class GUI {
     private void handleGet(Handler handler, Header header) throws IOException {
 
         switch (header.getPath()) {
-            case linkToCSS:
-                handler.returnFile(pathToCSS);
+            case LINK_TO_CSS:
+                handler.returnFile(PATH_TO_CSS);
                 break;
-            case linkToJS:
-                handler.returnFile(pathToJS);
+            case LINK_TO_JS:
+                handler.returnFile(PATH_TO_JS);
                 break;
-            case "/favicon.ico":
-                handler.returnFile("web/favicon.ico");
+            case LINK_TO_FAVICON:
+                handler.returnFile(PATH_TO_FAVICON);
                 break;
             case "/people":
                 this.handleGetPeople(handler, header);
@@ -142,52 +142,45 @@ class GUI {
                 this.handleGetBirthdays(handler, header);
                 break;
             // add other pages here
-            default:
-                this.handleGetHome(handler, header);
+            default: {
+                if (header.getDirname().equals("/person")) {
+                    this.handleGetPerson(handler, header);
+                } else {
+                    this.handleGetHome(handler, header);
+                }
+            }
         }
     }
 
-    private void handleGetPeople(Handler handler, Header header) throws IOException {
-        boolean showPersonPage = false;
-        int ID = 0;
+    private void handleGetPerson(Handler handler, Header header) throws IOException {
 
         try {
-            ID = Integer.parseInt(header.getQuery().get("id"));
+            int ID = Integer.parseInt(header.getFilename());
             if (ID > 0) {
-                showPersonPage = true;
+                Person person = this.personStore.find(ID);
+                if (person != null) {
+
+                    // should edit person?
+                    String editResponse = header.getQuery().get("edit");
+                    if (editResponse != null && editResponse.equals("true")) {
+                        this.handleGetPersonEdit(handler, header, person);
+                    } else {
+                        this.handleGetPersonView(handler, header, person);
+                    }
+                    return;
+                }
             }
         } catch (NumberFormatException e) {}
 
-        if (showPersonPage) {
-            this.handleGetPeopleSingle(handler, header, ID);
-        } else {
-            this.handleGetPeopleAll(handler, header);
-        }
+        handler.errorNotFound();
     }
 
-    private void handleGetPeopleSingle(Handler handler, Header header, int ID) throws IOException {
-
-        Person person = this.personStore.find(ID);
-        if (person == null) {
-            handler.errorNotFound();
-        } else {
-
-            // should edit person?
-            String editResponse = header.getQuery().get("edit");
-            if (editResponse != null && editResponse.equals("true")) {
-                this.handleGetPeopleSingleEdit(handler, header, person);
-            } else {
-                this.handleGetPeopleSingleView(handler, header, person);
-            }
-        }
-    }
-
-    private void handleGetPeopleSingleEdit(Handler handler, Header header, Person person) throws IOException {
+    private void handleGetPersonEdit(Handler handler, Header header, Person person) throws IOException {
         // fields in input tag:
         //  - id is used to link labels to inputs
         //  - name is what it is called when submitted in POST request
         //  - value is what they start with already inputted into them
-        String out = "<button onclick=\"window.location.href='" + linkToPerson + person.formatID() + "';\">Cancel</button>";
+        String out = "<button onclick=\"window.location.href='" + LINK_TO_PERSON + person.formatID() + "';\">Cancel</button>";
         out += "<form action='' method='POST'>";
 
         // names
@@ -280,8 +273,8 @@ class GUI {
         handler.returnString(generateHTML("Edit " + person.formatNameFirstLast(), out));
     }
 
-    private void handleGetPeopleSingleView(Handler handler, Header header, Person person) throws IOException {
-        String out = "<button onclick=\"window.location.href='" + linkToPerson + person.formatID() + "&edit=true';\">Edit</button>";
+    private void handleGetPersonView(Handler handler, Header header, Person person) throws IOException {
+        String out = "<button onclick=\"window.location.href='" + LINK_TO_PERSON + person.formatID() + "?edit=true';\">Edit</button>";
         out += "<h1>" + person.formatNameFirstLast() + "</h1>";
         out += "<p><b>Full Name:</b> " + person.formatNameFull() + "</p>";
         out += "<p><b>Sex:</b> " + person.formatSex() + "</p>";
@@ -406,7 +399,7 @@ class GUI {
         return out;
     }
 
-    private void handleGetPeopleAll(Handler handler, Header header) throws IOException {
+    private void handleGetPeople(Handler handler, Header header) throws IOException {
 
         // TODO: sorting and choosing data buttons
 
@@ -494,7 +487,7 @@ class GUI {
         if (person == null) {
             return "Unknown";
         }
-        return "<a href='" + linkToPerson + person.formatID() + "'>" + person.formatNameFirstLast() + "</a>";
+        return "<a href='" + LINK_TO_PERSON + person.formatID() + "'>" + person.formatNameFirstLast() + "</a>";
     }
 
     private String linkChildNames(Person person) {
@@ -557,7 +550,7 @@ class GUI {
 
     private static String generateHTML(String title, String rest) throws IOException {
         String navs = "";
-        for (String page: pages) {
+        for (String page: PAGES) {
             navs += "<a";
             if (page.equals(title)) {
                 navs += " class='active'";
@@ -566,16 +559,18 @@ class GUI {
         }
 
         // External CSS not being applied so copy it into the head
-        String css = Files.readString(Path.of(pathToCSS));
+        String css = Files.readString(Path.of(PATH_TO_CSS));
+        String js  = Files.readString(Path.of(PATH_TO_JS));
 
         return ""
         + "<!DOCTYPE html>"
         + "<html>"
             + "<head>"
                 + "<title>" + title + " | Family Tree</title>"
-                // + "<link rel='stylesheet' type='text/css' href='" + linkToCSS + "'>"
+                // + "<link rel='stylesheet' type='text/css' href='" + LINK_TO_CSS + "'>"
                 + "<style>" + css + "</style>"
-                + "<script src='" + linkToJS + "'></script>"
+                // + "<script src='" + LINK_TO_JS + "'></script>"
+                + "<script>" + js + "</script>"
             + "</head>"
             + "<body>"
                 + "<div class='topnav'>" + navs + "</div><br>"
