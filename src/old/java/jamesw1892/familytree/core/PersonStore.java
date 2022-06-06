@@ -208,23 +208,61 @@ public class PersonStore {
         this.link(this.findAssert(ID), motherID, fatherID);
     }
 
-    public void link(Person person, Integer motherID, Integer fatherID) {
-        if (motherID != null) {
-            Boolean motherIsMale = this.findAssert(motherID).getIsMale();
+    public void link(Person person, Integer newMotherID, Integer newFatherID) {
+
+        // ensure the mother is female
+        if (newMotherID != null) {
+            Boolean motherIsMale = this.findAssert(newMotherID).getIsMale();
             if (motherIsMale == null || motherIsMale) {
                 throw new IllegalArgumentException("Mother must be a female");
             }
         }
 
-        if (fatherID != null) {
-            Boolean fatherIsMale = this.findAssert(fatherID).getIsMale();
+        // ensure the father is male
+        if (newFatherID != null) {
+            Boolean fatherIsMale = this.findAssert(newFatherID).getIsMale();
             if (fatherIsMale == null || !fatherIsMale) {
                 throw new IllegalArgumentException("Father must be a male");
             }
         }
 
-        person.setMotherID(motherID);
-        person.setFatherID(fatherID);
+        // remove the person from the old mother's children if it has changed
+        Integer oldMotherID = person.getMotherID();
+        if (oldMotherID != null && oldMotherID != newMotherID) {
+            Person oldMother = this.find(oldMotherID);
+            if (oldMother != null) {
+                oldMother.removeChild(person.getID());
+            }
+        }
+
+        // remove the person from the old father's children if it has changed
+        Integer oldFatherID = person.getFatherID();
+        if (oldFatherID != null && oldFatherID != newFatherID) {
+            Person oldFather = this.find(oldFatherID);
+            if (oldFather != null) {
+                oldFather.removeChild(person.getID());
+            }
+        }
+
+        // add the person to the new mother's children if it has changed
+        if (newMotherID != null && newMotherID != oldMotherID) {
+            Person newMother = this.find(newMotherID);
+            if (newMother != null) {
+                newMother.addChild(person.getID());
+            }
+        }
+
+        // add the person to the new father's children if it has changed
+        if (newFatherID != null && newFatherID != oldFatherID) {
+            Person newFather = this.find(newFatherID);
+            if (newFather != null) {
+                newFather.addChild(person.getID());
+            }
+        }
+
+        // make the change
+        person.setMotherID(newMotherID);
+        person.setFatherID(newFatherID);
     }
 
     public void editAll(int ID, String nameFirst, String nameMiddles, String nameLast,

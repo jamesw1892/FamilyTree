@@ -161,6 +161,10 @@ public class Person implements Comparable<Person> {
         this.children.add(childID);
     }
 
+    protected void removeChild(int childID) {
+        this.children.remove(childID);
+    }
+
     // getters (data as original type)
     public int getID()                          { return this.ID; }
     public String getNameFirst()                { return this.nameFirst; }
