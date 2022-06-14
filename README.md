@@ -10,7 +10,7 @@ A program for viewing and editing family members and a family tree.
 
 # Versions
 
-There are three versions in increasing order of age which each have their own README files:
+There are three versions which each have their own README files:
 
 1. Old Python (`src/old/python`): This is a very old version that stored the data in a database. This hasn't been touched since June 2020.
 1. Old Java (`src/old/java`): **This is the current version** despite the below version being planned. It stores data in a CSV file and the main web version is a custom web server, although files that can be served by a generic web server were started.
