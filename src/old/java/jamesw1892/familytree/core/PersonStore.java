@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.zip.DataFormatException;
@@ -26,6 +27,7 @@ public class PersonStore {
     private TreeSet<Person> peopleByDaysUntilBirthday;
     private TreeSet<Integer> unusedIDs;
     private int nextID;
+    private LocalDate dateLastUpdatedPeopleByDaysUntilBirthday;
 
     public PersonStore() throws IOException, DataFormatException {
         this.read();
@@ -36,6 +38,16 @@ public class PersonStore {
     }
 
     public TreeSet<Person> getEveryoneByDaysUntilBirthday() {
+
+        // If the program is running for multiple days, the tree set ordering
+        // will become wrong. So recalculate it if it hasn't been updated today.
+        LocalDate today = LocalDate.now();
+        if (!today.equals(this.dateLastUpdatedPeopleByDaysUntilBirthday)) {
+            this.peopleByDaysUntilBirthday.clear();
+            this.peopleByDaysUntilBirthday.addAll(this.peopleByID);
+            this.dateLastUpdatedPeopleByDaysUntilBirthday = today;
+        }
+
         return this.peopleByDaysUntilBirthday;
     }
 
@@ -356,6 +368,7 @@ public class PersonStore {
         this.peopleByDaysUntilBirthday = new TreeSet<>(comparatorDaysUntilBirthday);
         this.unusedIDs = new TreeSet<>();
         this.nextID = 1;
+        this.dateLastUpdatedPeopleByDaysUntilBirthday = LocalDate.now();
 
         MultiMap<Integer, Integer> childrenToAdd = new MultiMap<>();
 
