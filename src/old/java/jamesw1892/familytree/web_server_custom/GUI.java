@@ -114,6 +114,7 @@ class GUI {
             this.personStore.editAll(person, nameFirst, nameMiddles, nameLast,
                 isMale, birthYear, birthMonth, birthDay, isLiving, deathYear,
                 deathMonth, deathDay, notes, motherID, fatherID);
+            this.personStore.write();
             html = "<h1>Success</h1><p>Saved</p>";
         } catch (IllegalArgumentException e) {
             html = "<h1>Failure</h1><p>Invalid data, not edited, try again</p><p>" + e.getMessage() + "</p>";
