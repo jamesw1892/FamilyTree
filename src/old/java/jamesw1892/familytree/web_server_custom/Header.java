@@ -1,11 +1,10 @@
 package web_server_custom;
 
+import core.Util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,7 +19,7 @@ import java.util.HashMap;
  * data is the data appearing after the header, confusingly part of this class
  * 
  * `query`, `fields`, and `data` are the `HashMap` versions of `queryStr`, `fieldsStr`, and `dataStr` respectively
- * where `queryStr` and `dataStr` is `key1=val1&key2=val2` etc and `fieldsStr` is `key1: val1[newline]key2: val2` etc
+ * where `queryStr` and `dataStr` are `key1=val1&key2=val2` etc and `fieldsStr` is `key1: val1[newline]key2: val2` etc
  */
 public class Header {
     private String header;
@@ -64,8 +63,7 @@ public class Header {
         }
         this.parse(headerLines);
 
-        line = "";
-        this.dataStr = null; // default
+        this.dataStr = ""; // default
 
         // Now we need to read the post data if there is any
         // We can't read until EOF because EOF is only given if the socket is
@@ -75,18 +73,13 @@ public class Header {
             int contentLength = Integer.valueOf(this.fields.get("Content-Length"));
             for (int dummy = 0; dummy < contentLength; dummy++) {
                 char chr = (char) in.read();
-                line += chr;
+                dataStr += chr;
             }
-
-            // decode if encoded as expected
-            if (this.fields.get("Content-Type").equals("application/x-www-form-urlencoded")) {
-                this.dataStr = URLDecoder.decode(line, StandardCharsets.UTF_8.toString());
-            }
-            // if not encoded like this then not implemented so ignore and leave this.data as null
         }
 
-        // parse into dictionary
-        this.data = this.parseUrlList(this.dataStr);
+        // parse into dictionary and decode if content type is as expected
+        boolean shouldDecode = this.fields.containsKey("Content-Type") && this.fields.get("Content-Type").equals("application/x-www-form-urlencoded");
+        this.data = this.parseUrlList(this.dataStr, shouldDecode);
 
         // don't close buffered reader as will close the socket
     }
@@ -218,14 +211,14 @@ public class Header {
 
     private void parseQuery(String q) {
         this.queryStr = q;
-        this.query = this.parseUrlList(q);
+        this.query = this.parseUrlList(q, false);
     }
 
     /**
      * Return a dictionary of fields and values in the url list of the form
      * field1=value1&field2=value2
      */
-    private HashMap<String, String> parseUrlList(String listStr) {
+    private HashMap<String, String> parseUrlList(String listStr, boolean shouldDecode) {
         HashMap<String, String> listMap = new HashMap<>();
 
         if (listStr != null && !listStr.isEmpty()) {
@@ -233,10 +226,18 @@ public class Header {
                 String[] pairSplit = pair.split("=");
                 switch (pairSplit.length) {
                     case 2:
-                        listMap.put(pairSplit[0], pairSplit[1]);
+                        if (shouldDecode) {
+                            listMap.put(Util.URLDecode(pairSplit[0]), Util.URLDecode(pairSplit[1]));
+                        } else {
+                            listMap.put(pairSplit[0], pairSplit[1]);
+                        }
                         break;
                     case 1:
-                        listMap.put(pairSplit[0], "");
+                        if (shouldDecode) {
+                            listMap.put(Util.URLDecode(pairSplit[0]), "");
+                        } else {
+                            listMap.put(pairSplit[0], "");
+                        }
                         break;
                     case 0:
                         // only happens when 'listStr' only contain '&'s

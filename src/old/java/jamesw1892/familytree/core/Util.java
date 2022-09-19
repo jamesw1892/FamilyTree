@@ -1,5 +1,8 @@
 package core;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 
 public class Util {
@@ -211,16 +214,38 @@ public class Util {
     }
 
     /**
-     * Decode the given string for CSV by replacing semi-colons with commas
+     * Decode the given string for CSV
      */
     public static String decodeString(String s) {
-        return s.replace(';', ',');
+        return URLDecode(s);
     }
 
     /**
-     * Encode the given string for CSV by replacing commas with semi-colons
+     * Encode the given string for CSV
      */
     public static String encodeString(String s) {
-        return s.replace(',', ';');
+        return URLEncode(s);
+    }
+
+    /**
+     * Return the given string encoded for URLs in UTF-8
+     */
+    public static String URLEncode(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException err) {
+            throw new RuntimeException(err);
+        }
+    }
+
+    /**
+     * Return the given string decoded for URLs from UTF-8
+     */
+    public static String URLDecode(String s) {
+        try {
+            return URLDecoder.decode(s, "UTF-8");
+        } catch (UnsupportedEncodingException err) {
+            throw new RuntimeException(err);
+        }
     }
 }

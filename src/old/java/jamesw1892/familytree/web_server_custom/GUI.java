@@ -181,7 +181,7 @@ class GUI {
         //  - name is what it is called when submitted in POST request
         //  - value is what they start with already inputted into them
         String out = "<button onclick=\"window.location.href='" + LINK_TO_PERSON + person.formatID() + "';\">Cancel</button>";
-        out += "<form action='' method='POST'>";
+        out += "<form action='' method='POST' enctype='application/x-www-form-urlencoded' accept-charset='UTF-8'>";
 
         // names
         out += "<label for='nameFirst'>First Name: </label>";
