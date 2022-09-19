@@ -45,10 +45,9 @@ public class Handler implements Runnable {
 
         // TODO: Add relevant fields
         this.outputString.println("HTTP/1.1 " + responseCode);
-        this.outputString.println("Server: Java HTTP Server by 1892");
         this.outputString.println("Date: " + new Date());
-        this.outputString.println("Content-type: " + "?");
-        this.outputString.println("Content-length: " + "?");
+        this.outputString.println("Content-type: text/html; charset=UTF-8");
+        // this.outputString.println("Content-length: " + "?");
         this.outputString.println();
         this.outputString.flush();
     }
