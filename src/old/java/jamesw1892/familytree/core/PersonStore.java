@@ -188,14 +188,16 @@ public class PersonStore {
         return person;
     }
 
-    public void add(String nameFirst, String nameMiddles, String nameLast, Boolean isMale,
+    public int add(String nameFirst, String nameMiddles, String nameLast, Boolean isMale,
                     Integer birthYear, Integer birthMonth, Integer birthDay, Boolean isLiving,
                     Integer deathYear, Integer deathMonth, Integer deathDay, String notes) {
-        Person person = new Person(this.getNextIDToUse(), nameFirst, nameMiddles, nameLast,
+        int id = this.getNextIDToUse();
+        Person person = new Person(id, nameFirst, nameMiddles, nameLast,
         isMale, birthYear, birthMonth, birthDay, isLiving,
         deathYear, deathMonth, deathDay, notes, null, null);
         this.peopleByID.add(person);
         this.peopleByDaysUntilBirthday.add(person);
+        return id;
     }
 
     public void delete(int ID) {
