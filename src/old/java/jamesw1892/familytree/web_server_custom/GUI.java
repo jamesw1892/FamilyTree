@@ -59,18 +59,31 @@ class GUI {
 
     private void handlePost(Handler handler, Header header) throws IOException {
 
-        try {
-            int ID = Integer.parseInt(header.getFilename());
-            if (ID > 0) {
-                Person person = this.personStore.find(ID);
-                if (person != null) {
-                    this.handlePostSaveData(handler, header, person);
-                    return;
+        switch (header.getDirname()) {
+            case "/person":
+                try {
+                    int ID = Integer.parseInt(header.getFilename());
+                    if (ID > 0) {
+                        Person person = this.personStore.find(ID);
+                        if (person != null) {
+                            this.handlePostSaveData(handler, header, person);
+                            return;
+                        }
+                    }
+                } catch (NumberFormatException e) {}
+                break;
+            case "/people":
+                switch (header.getFilename()) {
+                    case "add":
+                        this.handlePostAddPerson(handler, header);
+                        break;
+                    default:
+                        handler.errorNotFound();
                 }
-            }
-        } catch (NumberFormatException e) {}
-
-        handler.errorNotFound();
+                break;
+            default:
+                handler.errorNotFound();
+        }
     }
 
     private static Boolean parseBool(String b) {
@@ -124,6 +137,38 @@ class GUI {
         handler.returnString(generateHTML("Post Result", html));
     }
 
+    private void handlePostAddPerson(Handler handler, Header header) throws IOException {
+        HashMap<String, String> data = header.getData();
+        String html;
+
+        try {
+            int id = this.personStore.add(
+                data.get("nameFirst"),
+                data.get("nameMiddles"),
+                data.get("nameLast"),
+                parseBool(data.get("isMale")),
+                parseInt(data.get("birthYear")),
+                parseInt(data.get("birthMonth")),
+                parseInt(data.get("birthDay")),
+                parseBool(data.get("isLiving")),
+                parseInt(data.get("deathYear")),
+                parseInt(data.get("deathMonth")),
+                parseInt(data.get("deathDay")),
+                data.get("notes")
+            );
+            this.personStore.link(
+                id, 
+                parseInt(data.get("mother")),
+                parseInt(data.get("father"))
+            );
+            this.personStore.write();
+            html = "<h1>Success</h1><p>Created</p><button onclick=\"window.location.href='" + LINK_TO_PERSON + String.valueOf(id) + "';\">View</button>";
+        } catch (IllegalArgumentException e) {
+            html = "<h1>Failure</h1><p>Invalid data, not created, try again</p><p>" + e.getMessage() + "</p><button onclick=\"window.location.href='/people';\">Back</button>";
+        }
+        handler.returnString(generateHTML("Post Result", html));
+    }
+
     private void handleGet(Handler handler, Header header) throws IOException {
 
         switch (header.getPath()) {
@@ -138,6 +183,9 @@ class GUI {
                 break;
             case "/people":
                 this.handleGetPeople(handler, header);
+                break;
+            case "/people/add":
+                this.handleGetPeopleAdd(handler, header);
                 break;
             case "/birthdays":
                 this.handleGetBirthdays(handler, header);
@@ -481,7 +529,87 @@ class GUI {
             count++;
         }
 
-        handler.returnString(generateHTML("People", tabulate(data)));
+        String addButton = "<button onclick=\"window.location.href='/people/add';\">Add Person</button><br><br>";
+
+        handler.returnString(generateHTML("People", addButton + tabulate(data)));
+    }
+
+    private void handleGetPeopleAdd(Handler handler, Header header) throws IOException {
+        // fields in input tag:
+        //  - id is used to link labels to inputs
+        //  - name is what it is called when submitted in POST request
+        //  - value is what they start with already inputted into them
+        String out = "<button onclick=\"window.location.href='/people';\">Cancel</button>";
+        out += "<form action='' method='POST' enctype='application/x-www-form-urlencoded' accept-charset='UTF-8'>";
+
+        // names
+        out += "<label for='nameFirst'>First Name: </label>";
+        out += "<input type='text' id='nameFirst' name='nameFirst'><br>";
+        out += "<label for='nameMiddles'>Middle Name(s): </label>";
+        out += "<input type='text' id='nameMiddles' name='nameMiddles'><br>";
+        out += "<label for='nameLast'>Last Name: </label>";
+        out += "<input type='text' id='nameLast' name='nameLast'><br>";
+
+        // sex
+        out += "<label for='isMale'>Sex: </label>";
+        out += "<select name='isMale' id='isMale'>";
+        out += "<option value='null'>Unknown</option>";
+        out += "<option value='true'>Male</option>";
+        out += "<option value='false'>Female</option>";
+        out += "</select><br>";
+
+        // Date of birth
+        out += "<label for='birthYear'>Birth Year: </label>";
+        out += "<input type='number' id='birthYear' name='birthYear' min='1000' max='9999'><br>";
+        out += "<label for='birthMonth'>Birth Month: </label>";
+        out += "<input type='number' id='birthMonth' name='birthMonth' min='1' max='12'><br>";
+        out += "<label for='birthDay'>Birth Day: </label>";
+        out += "<input type='number' id='birthDay' name='birthDay' min='1' max='31'><br>";
+
+        // Is Living
+        out += "<label for='isLiving'>Living? </label>";
+        out += "<select name='isLiving' id='isLiving'>";
+        out += "<option value='null'>Unknown</option>";
+        out += "<option value='true'>Living</option>";
+        out += "<option value='false'>Deceased</option>";
+        out += "</select><br>";
+
+        // Date of death
+        out += "<label for='deathYear'>Death Year: </label>";
+        out += "<input type='number' id='deathYear' name='deathYear' min='1000' max='9999'><br>";
+        out += "<label for='deathMonth'>Death Month: </label>";
+        out += "<input type='number' id='deathMonth' name='deathMonth' min='1' max='12'><br>";
+        out += "<label for='deathDay'>Death Day: </label>";
+        out += "<input type='number' id='deathDay' name='deathDay' min='1' max='31'><br>";
+
+        // Mother
+        out += "<label for='mother'>Mother: </label>";
+        out += "<input list='motherlist' name='mother' id='mother'>";
+        out += "<datalist name='motherlist' id='motherlist'>";
+        out += "<option value='Unknown'>"; // unknown option
+        for (Person potentialMother: this.personStore.getEveryoneByID()) { // TODO: potentially only include females
+            out += "<option value='" + potentialMother.formatID() + "'>" + potentialMother.formatNameFirstLast() + "</option>";
+        }
+        out += "</datalist><br>";
+
+        // Father
+        out += "<label for='father'>Father: </label>";
+        out += "<input list='fatherlist' name='father' id='father'>";
+        out += "<datalist name='fatherlist' id='fatherlist'>";
+        out += "<option value='Unknown'>"; // unknown option
+        for (Person potentialFather: this.personStore.getEveryoneByID()) { // TODO: potentially only include males
+            out += "<option value='" + potentialFather.formatID() + "'>" + potentialFather.formatNameFirstLast() + "</option>";
+        }
+        out += "</datalist><br>";
+
+        // Notes
+        out += "<label for='notes'>Notes:</label><br>";
+        out += "<textarea id='notes' name='notes' rows='5' cols='100'></textarea><br>";
+
+        // Submit button
+        out += "<input type='submit' value='Submit'>";
+        out += "</form>";
+        handler.returnString(generateHTML("Add Person", out));
     }
 
     private static String linkName(Person person) {
