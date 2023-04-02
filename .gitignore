@@ -13,7 +13,8 @@ __pycache__
 ~*.tmp
 
 # The data
-*.csv
+People.csv
+Backup.csv
 *.db
 
 # VS Code Settings

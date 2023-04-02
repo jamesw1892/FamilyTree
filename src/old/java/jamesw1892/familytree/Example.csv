@@ -1,0 +1,10 @@
+ID,First Name,Middle Names,Last Name,Is Male,Birth Year,Birth Month,Birth Day,Is Living,Death Year,Death Month,Death Day,Mother ID,Father ID,Notes
+1,Amy,Reon,Bright,false,1980,7,12,true,,,,5,6,Married+Husband+on+4th+May+2005+and+changed+name+to+Horton.
+2,Husband,Of+Amy,Horton,true,1978,5,28,true,,,,,,Married+Amy+on+4th+May+2005.
+3,Son,Of+Amy,Horton,true,2007,1,2,false,2013,1,4,1,2,Sadly+died+at+a+young+age.
+4,Daughter,Of+Amy,Horton,false,2009,12,9,true,,,,1,2,
+5,Mother,Of+Amy,Jackson,false,1951,2,25,true,,,,,,Married+Father+Of+Amy+on+2nd+July+1975+and+changed+name+to+Bright.
+6,Father,Of+Amy,Bright,true,1948,8,26,false,2020,10,26,,,
+7,Brother,Of+Amy,Bright,true,1977,10,17,true,,,,5,6,
+8,Sister+In-Law,Of+Amy,Jones,false,,4,19,true,,,,,,Unknown+year+of+birth.
+9,Nephew,Of,Bright,true,2007,6,,true,,,,8,7,Known+year+and+month+of+birth+but+not+day.
