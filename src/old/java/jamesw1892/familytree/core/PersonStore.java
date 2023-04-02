@@ -1,6 +1,7 @@
 package core;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -374,7 +375,13 @@ public class PersonStore {
 
         MultiMap<Integer, Integer> childrenToAdd = new MultiMap<>();
 
-        BufferedReader br = new BufferedReader(new FileReader(FILENAME));
+        // If no file, return with no people saved
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(FILENAME));
+        } catch (FileNotFoundException e) {
+            return;
+        }
 
         String line;
 
