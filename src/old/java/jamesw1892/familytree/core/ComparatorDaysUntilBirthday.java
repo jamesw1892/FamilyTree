@@ -7,15 +7,9 @@ public class ComparatorDaysUntilBirthday implements Comparator<Person> {
         if (person1 == null || person2 == null) {
             throw new NullPointerException();
         }
-        Integer p1days = person1.getDaysUntilBirthday();
-        Integer p2days = person2.getDaysUntilBirthday();
-        if (p1days == null) {
-            return 1;
-        }
-        if (p2days == null) {
-            return -1;
-        }
-        int comp = p1days.compareTo(p2days);
+        int p1days = person1.getDaysUntilBirthday();
+        int p2days = person2.getDaysUntilBirthday();
+        int comp = Integer.compare(p1days, p2days);
 
         /*
         I store people in a tree set which does not allow duplicates.

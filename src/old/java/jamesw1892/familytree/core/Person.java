@@ -282,15 +282,15 @@ public class Person implements Comparable<Person> {
     }
 
     /**
-     * Ranges from 0 if birthday is today to 365 if leap year and birthday was yesturday
+     * Ranges from 0 if birthday is today to 365 if leap year and birthday was yesterday
      * @return
      */
-    public Integer getDaysUntilBirthday() {
+    public int getDaysUntilBirthday() {
         return Util.daysUntilBirthday(this.birthMonth, this.birthDay);
     }
 
     public String formatDaysUntilBirthday() {
-        return Util.unknownOrValue(this.getDaysUntilBirthday());
+        return String.valueOf(this.getDaysUntilBirthday());
     }
 
     /**

@@ -187,10 +187,14 @@ public class Util {
         return age;
     }
 
-    public static Integer daysUntilBirthday(Integer birthMonth, Integer birthDay) {
+    public static int daysUntilBirthday(Integer birthMonth, Integer birthDay) {
 
-        if (birthMonth == null || birthDay == null) {
-            return null;
+        // if unknown, assume the 1st day/month to estimate
+        if (birthMonth == null) {
+            birthMonth = 1;
+        }
+        if (birthDay == null) {
+            birthDay = 1;
         }
 
         LocalDate today = LocalDate.now();
