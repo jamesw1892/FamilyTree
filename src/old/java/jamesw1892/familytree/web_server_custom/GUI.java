@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.TreeSet;
 import java.util.zip.DataFormatException;
 
@@ -655,7 +656,18 @@ class GUI {
     }
 
     private void handleGetHome(Handler handler, Header header) throws IOException {
-        String rest = "<h1>Family Tree</h1>" + treeHTMLDown(personStore.find(15));
+        String rest = "<h1>Family Tree</h1>";
+        Person person = personStore.find(15);
+        if (person != null) {
+            rest += treeHTMLDown(person);
+        } else {
+            try {
+                person = personStore.getEveryoneByID().first();
+                rest += treeHTMLDown(person);
+            } catch (NoSuchElementException e) {
+                rest += "<p>No people added yet</p>";
+            }
+        }
         handler.returnString(generateHTML("Home", rest));
     }
 
