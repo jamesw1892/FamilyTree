@@ -234,11 +234,11 @@ class GUI {
 
         // names
         out += "<label for='nameFirst'>First Name: </label>";
-        out += "<input type='text' id='nameFirst' name='nameFirst' value=" + person.formatNameFirst() + "><br>";
+        out += "<input type='text' id='nameFirst' name='nameFirst' value='" + person.formatNameFirst() + "'><br>";
         out += "<label for='nameMiddles'>Middle Name(s): </label>";
-        out += "<input type='text' id='nameMiddles' name='nameMiddles' value=" + person.formatNameMiddles() + "><br>";
+        out += "<input type='text' id='nameMiddles' name='nameMiddles' value='" + person.formatNameMiddles() + "'><br>";
         out += "<label for='nameLast'>Last Name: </label>";
-        out += "<input type='text' id='nameLast' name='nameLast' value=" + person.formatNameLast() + "><br>";
+        out += "<input type='text' id='nameLast' name='nameLast' value='" + person.formatNameLast() + "'><br>";
 
         // sex
         out += "<label for='isMale'>Sex: </label>";
