@@ -295,19 +295,21 @@ public class Person implements Comparable<Person> {
 
     /**
      * If were alive
+     * Their age on their birthday is always 1 more than their age unless their
+     * birthday is today. If it's unknown whether today is their birthday,
+     * assume it's not.
      * @return
      */
     public Integer getAgeAtBirthday() {
         Integer age = this.getAgeIfWereAlive();
-
-        if (this.birthMonth == null || this.birthDay == null || age == null) {
+        if (age == null) {
             return null;
         }
 
         LocalDate today = LocalDate.now();
         int day = today.getDayOfMonth();
         int month = today.getMonth().getValue();
-        if (this.birthMonth == month && this.birthDay == day) {
+        if (this.birthMonth != null && this.birthMonth == month && this.birthDay != null && this.birthDay == day) {
             return age;
         } else {
             return age + 1;
