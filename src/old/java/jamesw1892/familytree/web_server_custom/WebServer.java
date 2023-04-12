@@ -34,10 +34,10 @@ class WebServer implements Runnable {
      */
     public void run() {
 
-        System.out.println("Server started at http://localhost:" + this.port + " press enter to stop" + System.lineSeparator());
-
         try {
             ServerSocket serverSocket = new ServerSocket(this.port);
+            this.port = serverSocket.getLocalPort();
+            System.out.println("Server started at http://localhost:" + this.port + " press enter to stop" + System.lineSeparator());
             ExecutorService pool = Executors.newCachedThreadPool();
             Thread thisThread = Thread.currentThread();
 
@@ -96,6 +96,9 @@ class WebServer implements Runnable {
         // when they do, inturrupt the thread so it doesn't
         // handle any more requests
         thread.interrupt();
+
+        // update the port since if it was 0 then it will be randomly assigned
+        port = webServer.port;
 
         // issue a final dummy request (as the thread doesn't realise
         // it's been interrupted until another connection comes in to
