@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.zip.DataFormatException;
@@ -166,6 +167,62 @@ public class PersonStore {
             IDToUse = this.unusedIDs.pollFirst();
         }
         return IDToUse;
+    }
+
+    /**
+     * Return the number of descendants of the given person using the given
+     * cache of already calculated number of descendants.
+     */
+    private int numDescendants(Person person, HashMap<Integer, Integer> cache) {
+
+        // If we have already calculated the number of descendants of this person
+        // then use it
+        Integer cached = cache.get(person.getID());
+        if (cached != null) {
+            return cached;
+        }
+
+        // Otherwise, sum the number of descendants of their children +1 per child
+        int total = 0;
+        for (int childID: person.getChildrenIDs()) {
+            total += 1 + numDescendants(this.find(childID), cache);
+        }
+
+        // Cache this result to use in future
+        cache.put(person.getID(), total);
+
+        return total;
+    }
+
+    /**
+     * Return the person with the most descendants or null if there are no
+     * people stored.
+     */
+    public Person personWithMostDescendants() {
+        // TODO: Potentially calculate this once when read and again when
+        // certain changes are made and store so don't have to recalculate
+        // each time someone views the homepage
+
+        // Create an empty cache
+        HashMap<Integer, Integer> cache = new HashMap<>();
+
+        // Initialise the default - return null if and only if there are no
+        // people stored. Initialise numDescendants to -1 so even if no-one
+        // stored has any children, the number of descendants is 0 which is
+        // > -1 so they are returned rather than null.
+        Person currentWinner = null;
+        int currentWinnerNumDescendants = -1;
+
+        // Go through each person in order of ID and only replace if a strictly
+        // greater number of descendants so people with lower IDs are favoured
+        for (Person person: this.peopleByID) {
+            int descendants = numDescendants(person, cache);
+            if (descendants > currentWinnerNumDescendants) {
+                currentWinner = person;
+                currentWinnerNumDescendants = descendants;
+            }
+        }
+        return currentWinner;
     }
 
     /**
