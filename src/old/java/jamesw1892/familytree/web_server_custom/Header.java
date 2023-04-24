@@ -73,7 +73,7 @@ public class Header {
             int contentLength = Integer.valueOf(this.fields.get("Content-Length"));
             for (int dummy = 0; dummy < contentLength; dummy++) {
                 char chr = (char) in.read();
-                dataStr += chr;
+                this.dataStr += chr;
             }
         }
 
