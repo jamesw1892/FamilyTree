@@ -43,7 +43,7 @@ class WebServer implements Runnable {
 
             // until interrupted, accept requests in a new thread
             while (!thisThread.isInterrupted()) {
-                pool.execute(new Handler(serverSocket.accept(), gui, false));
+                pool.execute(new Handler(serverSocket.accept(), gui));
             }
 
             pool.shutdown();

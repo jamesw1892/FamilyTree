@@ -18,9 +18,6 @@ public class Handler implements Runnable {
     private PrintWriter outputString;
     private BufferedOutputStream outputFile;
 
-    private boolean shouldSaveHTML;
-    private Header currentHeader;
-
     private static final String CODE_OK = "200 OK";
     private static final String CODE_NOT_FOUND = "404 Not Found";
     private static final String CODE_NOT_IMPLEMENTED = "501 Not Implemented";
@@ -32,13 +29,12 @@ public class Handler implements Runnable {
      * @param socket
      * @param gui
      */
-    public Handler(Socket socket, GUI gui, boolean shouldSaveHTML) throws IOException {
+    public Handler(Socket socket, GUI gui) throws IOException {
         this.socket = socket;
         OutputStream outputStream = this.socket.getOutputStream();
         this.outputString = new PrintWriter(outputStream);
         this.outputFile = new BufferedOutputStream(outputStream);
         this.gui = gui;
-        this.shouldSaveHTML = shouldSaveHTML;
     }
 
     private void returnHeader(String responseCode) {
@@ -71,12 +67,6 @@ public class Handler implements Runnable {
         this.returnHeader(CODE_OK);
         this.outputString.println(response);
         this.outputString.flush();
-
-        if (this.shouldSaveHTML) {
-            PrintWriter pw = new PrintWriter("web/" + this.currentHeader.getPath() + ".html");
-            pw.write(response);
-            pw.close();
-        }
     }
 
     /**
@@ -102,8 +92,6 @@ public class Handler implements Runnable {
         try {
             // read and parse header
             Header header = new Header(this.socket, false);
-
-            this.currentHeader = header;
 
             // handle request - this method in the gui must call either
             // returnFile or returnString above exactly once
