@@ -73,17 +73,15 @@ class GUI {
                 } catch (NumberFormatException e) {}
                 break;
             case "/people":
-                switch (header.getFilename()) {
-                    case "add":
-                        this.handlePostAddPerson(handler, header);
-                        break;
-                    default:
-                        handler.errorNotFound();
+                if (header.getFilename().equals("add")) {
+                    this.handlePostAddPerson(handler, header);
+                    return;
                 }
                 break;
-            default:
-                handler.errorNotFound();
         }
+        // If haven't already returned after calling a function then 404
+        // This happens if invalid or non-existent ID or unknown page
+        handler.errorNotFound();
     }
 
     private static Boolean parseBool(String b) {
