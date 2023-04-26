@@ -218,20 +218,6 @@ public class Util {
     }
 
     /**
-     * Decode the given string for CSV
-     */
-    public static String decodeString(String s) {
-        return URLDecode(s);
-    }
-
-    /**
-     * Encode the given string for CSV
-     */
-    public static String encodeString(String s) {
-        return URLEncode(s);
-    }
-
-    /**
      * Return the given string encoded for URLs in UTF-8
      */
     public static String URLEncode(String s) {

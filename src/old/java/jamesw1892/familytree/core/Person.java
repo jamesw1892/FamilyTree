@@ -383,9 +383,9 @@ public class Person implements Comparable<Person> {
 
     public String toFile() {
         return  this.formatID()
-        + "," + Util.encodeString(this.nameFirst)
-        + "," + Util.encodeString(this.nameMiddles)
-        + "," + Util.encodeString(this.nameLast)
+        + "," + Util.URLEncode(this.nameFirst)
+        + "," + Util.URLEncode(this.nameMiddles)
+        + "," + Util.URLEncode(this.nameLast)
         + "," + optionalObjectToFile(this.isMale)
         + "," + optionalObjectToFile(this.birthYear)
         + "," + optionalObjectToFile(this.birthMonth)
@@ -396,6 +396,6 @@ public class Person implements Comparable<Person> {
         + "," + optionalObjectToFile(this.deathDay)
         + "," + optionalObjectToFile(this.motherID)
         + "," + optionalObjectToFile(this.fatherID)
-        + "," + Util.encodeString(this.notes);
+        + "," + Util.URLEncode(this.notes);
     }
 }

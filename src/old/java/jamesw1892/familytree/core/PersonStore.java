@@ -460,9 +460,9 @@ public class PersonStore {
 
                 Person person = new Person(
                     currentID,
-                    Util.decodeString(fields[1]),
-                    Util.decodeString(fields[2]),
-                    Util.decodeString(fields[3]),
+                    Util.URLDecode(fields[1]),
+                    Util.URLDecode(fields[2]),
+                    Util.URLDecode(fields[3]),
                     "".equals(fields[4]) ? null : Boolean.parseBoolean(fields[4]),
                     "".equals(fields[5]) ? null : Integer.parseInt(fields[5]),
                     "".equals(fields[6]) ? null : Integer.parseInt(fields[6]),
@@ -471,7 +471,7 @@ public class PersonStore {
                     "".equals(fields[9]) ? null : Integer.parseInt(fields[9]),
                     "".equals(fields[10]) ? null : Integer.parseInt(fields[10]),
                     "".equals(fields[11]) ? null : Integer.parseInt(fields[11]),
-                    Util.decodeString(fields[14]),
+                    Util.URLDecode(fields[14]),
                     "".equals(fields[12]) ? null : Integer.parseInt(fields[12]),
                     "".equals(fields[13]) ? null : Integer.parseInt(fields[13])
                 );
