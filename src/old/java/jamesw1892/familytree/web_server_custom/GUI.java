@@ -11,6 +11,7 @@ import java.util.zip.DataFormatException;
 
 import core.Person;
 import core.PersonStore;
+import core.Util;
 
 /**
  * Constructed once by the web server to handle all requests but
@@ -140,7 +141,7 @@ class GUI {
             this.personStore.write();
             html = "<h1>Success</h1><p>Saved</p>";
         } catch (IllegalArgumentException e) {
-            html = "<h1>Failure</h1><p>Invalid data, not edited, try again</p><p>" + e.getMessage() + "</p>";
+            html = "<h1>Failure</h1><p>Invalid data, not edited, try again</p><p>" + Util.encodeHtml(e.getMessage()) + "</p>";
         }
         html += "<button onclick=\"window.location.href='" + LINK_TO_PERSON + person.formatID() + "';\">Back</button>";
 
@@ -174,7 +175,7 @@ class GUI {
             this.personStore.write();
             html = "<h1>Success</h1><p>Created</p><button onclick=\"window.location.href='" + LINK_TO_PERSON + String.valueOf(id) + "';\">View</button>";
         } catch (IllegalArgumentException e) {
-            html = "<h1>Failure</h1><p>Invalid data, not created, try again</p><p>" + e.getMessage() + "</p><button onclick=\"window.location.href='/people';\">Back</button>";
+            html = "<h1>Failure</h1><p>Invalid data, not created, try again</p><p>" + Util.encodeHtml(e.getMessage()) + "</p><button onclick=\"window.location.href='/people';\">Back</button>";
         }
         handler.returnString(generateHTML("Post Result", html));
     }
@@ -244,11 +245,11 @@ class GUI {
 
         // names
         out += "<label for='nameFirst'>First Name: </label>";
-        out += "<input type='text' id='nameFirst' name='nameFirst' value='" + person.formatNameFirst() + "'><br>";
+        out += "<input type='text' id='nameFirst' name='nameFirst' value='" + Util.encodeHtml(person.formatNameFirst()) + "'><br>";
         out += "<label for='nameMiddles'>Middle Name(s): </label>";
-        out += "<input type='text' id='nameMiddles' name='nameMiddles' value='" + person.formatNameMiddles() + "'><br>";
+        out += "<input type='text' id='nameMiddles' name='nameMiddles' value='" + Util.encodeHtml(person.formatNameMiddles()) + "'><br>";
         out += "<label for='nameLast'>Last Name: </label>";
-        out += "<input type='text' id='nameLast' name='nameLast' value='" + person.formatNameLast() + "'><br>";
+        out += "<input type='text' id='nameLast' name='nameLast' value='" + Util.encodeHtml(person.formatNameLast()) + "'><br>";
 
         // sex
         out += "<label for='isMale'>Sex: </label>";
@@ -308,7 +309,7 @@ class GUI {
         out += "<datalist name='motherlist' id='motherlist'>";
         out += "<option value='Unknown'>"; // unknown option
         for (Person potentialMother: this.personStore.getEveryoneByID()) { // TODO: potentially only include females
-            out += "<option value='" + potentialMother.formatID() + "'>" + potentialMother.formatNameFirstLast() + "</option>";
+            out += "<option value='" + potentialMother.formatID() + "'>" + Util.encodeHtml(potentialMother.formatNameFirstLast()) + "</option>";
         }
         out += "</datalist><br>";
 
@@ -318,24 +319,24 @@ class GUI {
         out += "<datalist name='fatherlist' id='fatherlist'>";
         out += "<option value='Unknown'>"; // unknown option
         for (Person potentialFather: this.personStore.getEveryoneByID()) { // TODO: potentially only include males
-            out += "<option value='" + potentialFather.formatID() + "'>" + potentialFather.formatNameFirstLast() + "</option>";
+            out += "<option value='" + potentialFather.formatID() + "'>" + Util.encodeHtml(potentialFather.formatNameFirstLast()) + "</option>";
         }
         out += "</datalist><br>";
 
         // Notes
         out += "<label for='notes'>Notes:</label><br>";
-        out += "<textarea id='notes' name='notes' rows='5' cols='100'>" + person.formatNotes() + "</textarea><br>";
+        out += "<textarea id='notes' name='notes' rows='5' cols='100'>" + Util.encodeHtml(person.formatNotes()) + "</textarea><br>";
 
         // Submit button
         out += "<input type='submit' value='Submit'>";
         out += "</form>";
-        handler.returnString(generateHTML("Edit " + person.formatNameFirstLast(), out));
+        handler.returnString(generateHTML("Edit " + Util.encodeHtml(person.formatNameFirstLast()), out));
     }
 
     private void handleGetPersonView(Handler handler, Header header, Person person) throws IOException {
         String out = "<button onclick=\"window.location.href='" + LINK_TO_PERSON + person.formatID() + "?edit=true';\">Edit</button>";
-        out += "<h1>" + person.formatNameFirstLast() + "</h1>";
-        out += "<p><b>Full Name:</b> " + person.formatNameFull() + "</p>";
+        out += "<h1>" + Util.encodeHtml(person.formatNameFirstLast()) + "</h1>";
+        out += "<p><b>Full Name:</b> " + Util.encodeHtml(person.formatNameFull()) + "</p>";
         out += "<p><b>Sex:</b> " + person.formatSex() + "</p>";
         out += "<p><b>Date of Birth:</b> " + person.formatDateOfBirthLong() + "</p>";
         if (person.getIsLiving() != null && person.getIsLiving()) {
@@ -392,7 +393,7 @@ class GUI {
         if (notes.isEmpty()) {
             out += "<p>No notes yet</p>";
         } else {
-            out += "<p>" + notes + "</p>";
+            out += "<p>" + Util.encodeHtml(notes) + "</p>";
         }
 
         // family tree
@@ -401,7 +402,7 @@ class GUI {
         out += "<div class='column'><h2>Ancestors Tree</h2>" + treeHTMLUp(person) + "</div>";
         out += "</div>";
 
-        handler.returnString(generateHTML("View " + person.formatNameFirstLast(), out));
+        handler.returnString(generateHTML("View " + Util.encodeHtml(person.formatNameFirstLast()), out));
     }
 
     private String treeHTMLUp(Person person) {
@@ -598,7 +599,7 @@ class GUI {
         out += "<datalist name='motherlist' id='motherlist'>";
         out += "<option value='Unknown'>"; // unknown option
         for (Person potentialMother: this.personStore.getEveryoneByID()) { // TODO: potentially only include females
-            out += "<option value='" + potentialMother.formatID() + "'>" + potentialMother.formatNameFirstLast() + "</option>";
+            out += "<option value='" + potentialMother.formatID() + "'>" + Util.encodeHtml(potentialMother.formatNameFirstLast()) + "</option>";
         }
         out += "</datalist><br>";
 
@@ -608,7 +609,7 @@ class GUI {
         out += "<datalist name='fatherlist' id='fatherlist'>";
         out += "<option value='Unknown'>"; // unknown option
         for (Person potentialFather: this.personStore.getEveryoneByID()) { // TODO: potentially only include males
-            out += "<option value='" + potentialFather.formatID() + "'>" + potentialFather.formatNameFirstLast() + "</option>";
+            out += "<option value='" + potentialFather.formatID() + "'>" + Util.encodeHtml(potentialFather.formatNameFirstLast()) + "</option>";
         }
         out += "</datalist><br>";
 
@@ -626,7 +627,7 @@ class GUI {
         if (person == null) {
             return "Unknown";
         }
-        return "<a href='" + LINK_TO_PERSON + person.formatID() + "'>" + person.formatNameFirstLast() + "</a>";
+        return "<a href='" + LINK_TO_PERSON + person.formatID() + "'>" + Util.encodeHtml(person.formatNameFirstLast()) + "</a>";
     }
 
     private String linkChildNames(Person person) {

@@ -252,4 +252,22 @@ public class Util {
             throw new RuntimeException(err);
         }
     }
+
+    /**
+     * Encode the given string for HTML by encoding all non-letters and digits
+     * as HTML entities of the form "&#x00;" where 00 are replaced with the hex
+     * code character code of the char.
+     */
+    public static String encodeHtml(String s) {
+        // https://stackoverflow.com/a/44496251
+        String out = "";
+        for (char c: s.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                out += c;
+            } else {
+                out += String.format("&#x%x;", (int) c);
+            }
+        }
+        return out;
+    }
 }
