@@ -93,35 +93,47 @@ class GUI {
         return null;
     }
 
-    private static Integer parseInt(String i) {
-        if (i == null || i.isEmpty() || i.equals("null") || i.equals("Unknown")) {
+    /**
+     * Helper function to parse a web POST parameter that is meant to be an int.
+     * We accept null, empty string and "Unknown" to mean unknown and return
+     * null. Otherwise it must be an integer otherwise an error message will be
+     * presented containing the given param name so it is helpful.
+     */
+    private static Integer parseInt(String num, String paramName) {
+        // null if the parameter isn't even in the post data.
+        // We accept '' and 'Unknown' as meaning unknown too.
+        if (num == null || num.isEmpty() || num.equals("Unknown")) {
             return null;
         }
 
-        return Integer.parseInt(i);
+        try {
+            return Integer.parseInt(num);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException(paramName + " must be a whole number if known, otherwise empty or 'Unknown'");
+        }
     }
 
     private void handlePostSaveData(Handler handler, Header header, Person person) throws IOException {
 
-        HashMap<String, String> data = header.getData();
-        String nameFirst = data.get("nameFirst");
-        String nameMiddles = data.get("nameMiddles");
-        String nameLast = data.get("nameLast");
-        Boolean isMale = parseBool(data.get("isMale"));
-        Integer birthYear = parseInt(data.get("birthYear"));
-        Integer birthMonth = parseInt(data.get("birthMonth"));
-        Integer birthDay = parseInt(data.get("birthDay"));
-        Boolean isLiving = parseBool(data.get("isLiving"));
-        Integer deathYear = parseInt(data.get("deathYear"));
-        Integer deathMonth = parseInt(data.get("deathMonth"));
-        Integer deathDay = parseInt(data.get("deathDay"));
-        Integer motherID = parseInt(data.get("mother"));
-        Integer fatherID = parseInt(data.get("father"));
-        String notes = data.get("notes");
-
+        HashMap<String, String> data = header.getData();        
         String html;
-
+        
         try {
+            String nameFirst = data.get("nameFirst");
+            String nameMiddles = data.get("nameMiddles");
+            String nameLast = data.get("nameLast");
+            Boolean isMale = parseBool(data.get("isMale"));
+            Integer birthYear = parseInt(data.get("birthYear"), "Birth year");
+            Integer birthMonth = parseInt(data.get("birthMonth"), "Birth month");
+            Integer birthDay = parseInt(data.get("birthDay"), "Birth day");
+            Boolean isLiving = parseBool(data.get("isLiving"));
+            Integer deathYear = parseInt(data.get("deathYear"), "Death year");
+            Integer deathMonth = parseInt(data.get("deathMonth"), "Death month");
+            Integer deathDay = parseInt(data.get("deathDay"), "Death day");
+            Integer motherID = parseInt(data.get("mother"), "Mother ID");
+            Integer fatherID = parseInt(data.get("father"), "Father ID");
+            String notes = data.get("notes");
+
             this.personStore.editAll(person, nameFirst, nameMiddles, nameLast,
                 isMale, birthYear, birthMonth, birthDay, isLiving, deathYear,
                 deathMonth, deathDay, notes, motherID, fatherID);
@@ -145,19 +157,19 @@ class GUI {
                 data.get("nameMiddles"),
                 data.get("nameLast"),
                 parseBool(data.get("isMale")),
-                parseInt(data.get("birthYear")),
-                parseInt(data.get("birthMonth")),
-                parseInt(data.get("birthDay")),
+                parseInt(data.get("birthYear"), "Birth year"),
+                parseInt(data.get("birthMonth"), "Birth month"),
+                parseInt(data.get("birthDay"), "Birth day"),
                 parseBool(data.get("isLiving")),
-                parseInt(data.get("deathYear")),
-                parseInt(data.get("deathMonth")),
-                parseInt(data.get("deathDay")),
+                parseInt(data.get("deathYear"), "Death year"),
+                parseInt(data.get("deathMonth"), "Death month"),
+                parseInt(data.get("deathDay"), "Death day"),
                 data.get("notes")
             );
             this.personStore.link(
                 id, 
-                parseInt(data.get("mother")),
-                parseInt(data.get("father"))
+                parseInt(data.get("mother"), "Mother ID"),
+                parseInt(data.get("father"), "Father ID")
             );
             this.personStore.write();
             html = "<h1>Success</h1><p>Created</p><button onclick=\"window.location.href='" + LINK_TO_PERSON + String.valueOf(id) + "';\">View</button>";
