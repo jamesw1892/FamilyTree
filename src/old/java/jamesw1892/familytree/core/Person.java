@@ -99,7 +99,7 @@ public class Person implements Comparable<Person> {
     }
 
     protected void setBirthDay(Integer birthDay) {
-        if (this.birthDay != null) {
+        if (birthDay != null) {
             int maxDay = Util.maxValidDay(this.birthYear, this.birthMonth);
             if (birthDay < 1 || birthDay > maxDay) {
                 throw new IllegalArgumentException("birthDay must be between 1 and " + maxDay + " inclusive");
@@ -127,7 +127,7 @@ public class Person implements Comparable<Person> {
     }
 
     protected void setDeathDay(Integer deathDay) {
-        if (this.deathDay != null) {
+        if (deathDay != null) {
             int maxDay = Util.maxValidDay(this.deathYear, this.deathMonth);
             if (deathDay < 1 || deathDay > maxDay) {
                 throw new IllegalArgumentException("deathDay must be between 1 and " + maxDay + " inclusive");
