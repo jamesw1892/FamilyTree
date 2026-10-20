@@ -27,6 +27,25 @@ public class Person implements Comparable<Person> {
     private Integer fatherID;           //  Y                   > 0
     private HashSet<Integer> children;  //  N (empty instead)
 
+    /**
+     * Create a new person. Throws IllegalArgumentException if any arguments are
+     * invalid.
+     * @param ID The person's ID which must be > 0.
+     * @param nameFirst The person's first name which cannot be null. Use empty string to represent unknown or non-existent.
+     * @param nameMiddles The person's middle name(s) which cannot be null. Use empty string to represent unknown or non-existent.
+     * @param nameLast The person's last name which cannot be null. Use empty string to represent unknown or non-existent.
+     * @param isMale Whether the person is male (true), female (false), or unknown (null).
+     * @param birthYear The person's birth year which must be between 1000 and 9999 inclusive. Use null to represent unknown.
+     * @param birthMonth The person's birth month which must be between 1 and 12 inclusive. Use null to represent unknown.
+     * @param birthDay The person's birth day which must be between 1 and 31 inclusive, but must also be a valid day in the month given if provided. Use null to represent unknown.
+     * @param isLiving
+     * @param deathYear
+     * @param deathMonth
+     * @param deathDay
+     * @param notes
+     * @param motherID
+     * @param fatherID
+     */
     public Person(int ID, String nameFirst, String nameMiddles, String nameLast,
                   Boolean isMale,   Integer birthYear, Integer birthMonth, Integer birthDay,
                   Boolean isLiving, Integer deathYear, Integer deathMonth, Integer deathDay,
@@ -54,6 +73,11 @@ public class Person implements Comparable<Person> {
         this.children = new HashSet<>();
     }
 
+    /**
+     * Create and return a new Person object with the given ID but with all
+     * other fields blank/null. Throws IllegalArgumentException if the given ID
+     * is < 1.
+     */
     public static Person dummyPerson(int ID) {
         return new Person(ID, "", "", "", null, null, null, null, null, null, null, null, "", null, null);
     }

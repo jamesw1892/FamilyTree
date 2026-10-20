@@ -10,9 +10,8 @@ public class Controller {
 
     /**
      * Instantiate at the start of each test method
-     * @param fileRef
      * @param method
-     * @param inputs
+     * @param description
      */
     public Controller(String method, String description) {
         this.method = method;
@@ -75,8 +74,8 @@ public class Controller {
     }
 
     /**
-     * Run the tests
-     * @param args
+     * Run the tests.
+     * @param args Ignored.
      */
     public static void main(String[] args) {
         allTestsPassed = true;

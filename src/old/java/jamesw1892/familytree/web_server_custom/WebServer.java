@@ -91,6 +91,8 @@ class WebServer implements Runnable {
         thread.start();
 
         // this will block this thread until the user presses enter
+        // NOTE: If run with no tty (e.g. from systemctl) then this will throw
+        // NoSuchElementException
         sc.nextLine();
 
         // when they do, inturrupt the thread so it doesn't
