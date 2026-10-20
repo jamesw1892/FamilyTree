@@ -9,6 +9,9 @@ public class TestCorePerson {
 
         // Call the tests to run
         constructorID0();
+        constructorIntended();
+        dummyPerson0();
+        dummyPerson1();
         getNameFull();
     }
 
@@ -16,10 +19,47 @@ public class TestCorePerson {
         Controller c = new Controller("constructor", "Checks does not accept ID of 0");
 
         try {
-            new Person(0, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            new Person(0, "a", "b", "c", true, 1970, 1, 1, false, 1970, 1, 2, "", null, null);
             c.fail();
         } catch (IllegalArgumentException e) {
             c.pass();
+        }
+    }
+
+    private static void constructorIntended() {
+        Controller c = new Controller("constructor", "Checks the constructor works as intended on valid inputs");
+
+        try {
+            new Person(1, "a", "b", "c", true, 1970, 1, 1, false, 1970, 1, 2, "", null, null);
+            c.pass();
+        } catch (IllegalArgumentException e) {
+            c.fail();
+        }
+    }
+
+    private static void dummyPerson0() {
+        Controller c = new Controller("dummyPerson", "Should not accept ID < 1");
+
+        try {
+            Person.dummyPerson(0);
+            c.fail();
+        } catch (IllegalArgumentException e) {
+            c.pass();
+        }
+    }
+
+    private static void dummyPerson1() {
+        Controller c = new Controller("dummyPerson", "Check gives a dummy person as intended");
+
+        try {
+            Person dummy = Person.dummyPerson(1);
+            if (dummy.getID() == 1 && dummy.getNameFirst().equals("")) {
+                c.pass();
+            } else {
+                c.fail();
+            }
+        } catch (IllegalArgumentException e) {
+            c.fail();
         }
     }
 
